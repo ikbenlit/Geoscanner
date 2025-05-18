@@ -6,47 +6,47 @@
 - 🟢 Voltooid
 - ⚪ Onhold
 
-## Fase 1: Project Setup & Basis Infrastructuur (Week 1-2)
+## Fase 1: Project Setup & Basis Infrastructuur (Week 1-2) 🟢
 
-### 1.1 Development Omgeving Setup 🟡
+### 1.1 Development Omgeving Setup 🟢
 - [x] Next.js project initialisatie
 - [x] TypeScript configuratie
 - [x] ESLint & Prettier setup
-- [ ] Git repository setup
-- [ ] CI/CD pipeline configuratie
+- [x] Git repository setup
+- [x] CI/CD pipeline configuratie
 
-### 1.2 Basis Dependencies Installatie 🟡
+### 1.2 Basis Dependencies Installatie 🟢
 - [x] Tailwind CSS setup
 - [x] Radix UI & shadcn/ui installatie
 - [x] tRPC configuratie
-- [ ] Database (Vercel Postgres) setup
-- [ ] Redis (Upstash) configuratie
+- [x] Database (Vercel Postgres) setup
+- [ ] Redis (Upstash) configuratie (uitgesteld naar v1.1)
 
-### 1.3 Authenticatie & User Management 🔴
-- [ ] Clerk integratie
+### 1.3 Authenticatie & User Management 🟡
+- [x] Firebase Authentication integratie
 - [ ] Auth middleware setup
 - [ ] User model implementatie
 - [ ] Login/Register flows
 
-## Fase 2: Core Functionaliteit (Week 3-4)
+## Fase 2: Core Functionaliteit (Week 3-4) 🟡
 
-### 2.1 URL Scanner Module 🔴
-- [ ] URL validatie implementatie
-- [ ] Crawler component ontwikkeling
+### 2.1 Basis UI Implementatie 🟢
+- [x] Design system componenten
+- [x] Scan formulier
+- [x] Voortgangsindicator
+- [x] Basis resultaatweergave
+
+### 2.2 URL Scanner Module 🟡
+- [x] URL validatie implementatie
+- [x] Crawler component ontwikkeling
 - [ ] Robots.txt & sitemap parser
 - [ ] HTML snapshot functionaliteit
 
-### 2.2 Analyse Modules 1-2 🔴
+### 2.3 Analyse Modules 1-2 🔴
 - [ ] Module 1: Crawl-toegang implementatie
 - [ ] Module 2: Structured Data analyse
 - [ ] Parallelle verwerking setup
 - [ ] Resultaat aggregatie
-
-### 2.3 Basis UI Implementatie 🔴
-- [ ] Design system componenten
-- [ ] Scan formulier
-- [ ] Voortgangsindicator
-- [ ] Basis resultaatweergave
 
 ## Fase 3: Uitgebreide Functionaliteit (Week 5-6)
 
