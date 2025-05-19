@@ -131,182 +131,178 @@ export default function Home() {
   console.log('🎨 Rendering homepage UI');
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
-      <Card className="w-full max-w-2xl shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-3xl font-display font-bold text-midnight">
-            Is jouw website LLM-proof?
-          </CardTitle>
-          <CardDescription className="text-lg text-steel">
-            Scan je pagina en ontdek in 10 seconden hoe goed jouw content zichtbaar is in ChatGPT,
-            Claude en Google Gemini
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="url" className="text-steel">
-                URL
-              </Label>
-              <Input
-                id="url"
-                type="url"
-                placeholder="https://voorbeeld.nl"
-                className="w-full h-12 text-lg"
-                disabled={isScanning}
-                value={url}
-                onChange={e => setUrl(e.target.value)}
-                required
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Toggle
-                id="domain-scan"
-                aria-label="Volledige domeinscan"
-                disabled={isScanning}
-                pressed={fullDomainScan}
-                onPressedChange={setFullDomainScan}
-              >
-                Volledige domeinscan
-              </Toggle>
-              <Label htmlFor="domain-scan" className="text-sm text-steel">
-                Scan alle pagina's binnen dit domein
-              </Label>
-            </div>
-            <Button type="submit" className="w-full h-12 text-lg" disabled={isScanning}>
-              {isScanning ? 'Bezig met scannen...' : 'Start Scan'}
-            </Button>
-          </form>
-          {isScanning && (
-            <div className="mt-4">
-              <Progress value={progress} className="h-2" />
-            </div>
-          )}
-        </CardContent>
-      </Card>
+    <div className="flex flex-col items-center bg-gradient-to-br from-slate-900 via-slate-800 to-purple-900 text-white">
+      {/* Hero Sectie */}
+      <section className="w-full py-20 md:py-32 lg:py-40 flex flex-col items-center justify-center text-center">
+        <div className="container px-4 md:px-6">
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 [text-shadow:0_0_10px_rgba(255,255,255,0.3)]">
+            Is Jouw Website Klaar voor de AI Revolutie?
+          </h1>
+          <p className="mx-auto max-w-[700px] text-slate-200 md:text-xl mt-6 mb-10">
+            Ontdek direct hoe goed jouw content presteert in ChatGPT, Claude, Google Gemini en andere AI-zoekmachines. Onze GEO Scanner analyseert je website en geeft concrete optimalisatietips.
+          </p>
+          
+          <Card className="w-full max-w-xl mx-auto bg-white/10 backdrop-blur-md border-slate-600 shadow-xl">
+            <CardContent className="p-6 md:p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="url" className="text-slate-100 sr-only">
+                    Website URL
+                  </Label>
+                  <Input
+                    id="url"
+                    type="url"
+                    placeholder="https://jouwwebsite.nl"
+                    className="w-full h-14 text-lg bg-white placeholder-slate-400 border-slate-300 focus:border-purple-500 focus:ring-purple-500 text-slate-900"
+                    disabled={isScanning}
+                    value={url}
+                    onChange={e => setUrl(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Toggle
+                    id="domain-scan"
+                    aria-label="Volledige domeinscan"
+                    disabled={isScanning}
+                    pressed={fullDomainScan}
+                    onPressedChange={setFullDomainScan}
+                    className="data-[state=on]:bg-purple-600 data-[state=on]:text-slate-100 border-slate-500 hover:bg-white/20 text-slate-200"
+                  >
+                    Volledige domeinscan
+                  </Toggle>
+                  <Label htmlFor="domain-scan" className="text-sm text-slate-200">
+                    Analyseer alle pagina's (uitgebreidere scan)
+                  </Label>
+                </div>
+                <Button type="submit" className="w-full h-14 text-lg bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white font-semibold shadow-lg transform transition-all duration-150 ease-in-out hover:scale-105" disabled={isScanning}>
+                  {isScanning ? 'Bezig met scannen...' : 'Start Gratis Scan'}
+                </Button>
+              </form>
+              {isScanning && (
+                <div className="mt-6">
+                  <Progress value={progress} className="h-3 bg-white/30 [&>div]:bg-gradient-to-r [&>div]:from-purple-400 [&>div]:to-pink-500" />
+                  <p className="text-sm text-slate-400 mt-2 text-center">Analyse wordt uitgevoerd...</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
-      {/* Feature Banner */}
-      <FeatureBanner className="w-full max-w-2xl mt-12" />
+      {/* Feature Banner - eventueel anders positioneren of stylen */}
+      <FeatureBanner className="w-full max-w-4xl my-12 lg:my-16 bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-slate-700" />
 
       {/* Info Sectie */}
-      <div className="w-full max-w-2xl mt-12 space-y-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-display font-bold text-midnight mb-4">Hoe het werkt</h2>
-          <p className="text-steel">
-            We analyseren je website op 8 cruciale criteria voor LLM-visibility
-          </p>
+      <section className="w-full py-12 md:py-16 lg:py-20 bg-slate-50 text-slate-800">
+        <div className="container px-4 md:px-6 space-y-10">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl text-slate-900">Hoe GEO Scanner Jouw Website Transformeert</h2>
+            <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">
+              Ontdek hoe we jouw website analyseren op 6 cruciale criteria voor maximale AI-zichtbaarheid en betere zoekresultaten.
+            </p>
+          </div>
+
+          {/* AI-Optimalisatie Sectie */}
+          <div className="space-y-6 md:space-y-8">
+            <h3 className="text-2xl md:text-3xl font-semibold text-purple-700 border-b-2 border-purple-300 pb-3 mb-6 text-center md:text-left">
+              🚀 AI-Optimalisatie: Domineer de Toekomst van Zoeken
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+              <div className="criterion-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out p-6 md:p-8 flex flex-col items-center text-center md:items-start md:text-left">
+                <span className="text-5xl mb-4">🤖</span>
+                <h4 className="font-semibold text-xl text-slate-800 mb-2">Answer-Ready Content</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Wordt jouw content direct opgepikt als hét antwoord in AI-chatbots zoals ChatGPT en Google Gemini? Optimaliseer je tekst voor directe antwoorden en verover de felbegeerde featured snippets en AI-samenvattingen.
+                </p>
+              </div>
+
+              <div className="criterion-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out p-6 md:p-8 flex flex-col items-center text-center md:items-start md:text-left">
+                <span className="text-5xl mb-4">🌌</span>
+                <h4 className="font-semibold text-xl text-slate-800 mb-2">Structured Data & Semantiek (voor AI)</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Maak jouw website onmisbaar voor AI. Voed AI-modellen met rijke, gestructureerde data (Schema.org & JSON-LD) zodat ze de context, betekenis en relaties op jouw pagina's feilloos begrijpen en jouw content prefereren.
+                </p>
+              </div>
+
+              <div className="criterion-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out p-6 md:p-8 flex flex-col items-center text-center md:items-start md:text-left">
+                <span className="text-5xl mb-4">🖼️</span>
+                <h4 className="font-semibold text-xl text-slate-800 mb-2">Multimodale Optimalisatie</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Spreek de taal van moderne AI die verder kijkt dan tekst alleen. Optimaliseer afbeeldingen, video's en andere media zodat jouw content in alle formaten uitblinkt en de context verrijkt voor AI-interpretatie.
+                </p>
+              </div>
+
+              <div className="criterion-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out p-6 md:p-8 flex flex-col items-center text-center md:items-start md:text-left">
+                <span className="text-5xl mb-4">🌐</span>
+                <h4 className="font-semibold text-xl text-slate-800 mb-2">Cross-Web Autoriteit (E-E-A-T voor AI)</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Bouw een ijzersterke reputatie die AI herkent en beloont. Versterk je online autoriteit (Expertise, Authoritativeness, Trustworthiness) door kwalitatieve externe signalen en citaties, cruciaal voor zichtbaarheid in AI-gedreven zoekresultaten.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Fundamentele SEO Sectie */}
+          <div className="space-y-6 md:space-y-8 mt-12 lg:mt-16">
+            <h3 className="text-2xl md:text-3xl font-semibold text-blue-700 border-b-2 border-blue-300 pb-3 mb-6 text-center md:text-left">
+              🛠️ Fundamentele SEO: De Onmisbare Basis
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+              <div className="criterion-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out p-6 md:p-8 flex flex-col items-center text-center md:items-start md:text-left">
+                <span className="text-5xl mb-4">🔍</span>
+                <h4 className="font-semibold text-xl text-slate-800 mb-2">Crawl-Toegang & Indexeerbaarheid</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Zorg dat AI-zoekmachines en traditionele crawlers elke belangrijke pagina van jouw site moeiteloos kunnen ontdekken, lezen en indexeren. Een vlekkeloze technische toegankelijkheid is de fundering van online succes.
+                </p>
+              </div>
+
+              <div className="criterion-card bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out p-6 md:p-8 flex flex-col items-center text-center md:items-start md:text-left">
+                <span className="text-5xl mb-4">⏱️</span>
+                <h4 className="font-semibold text-xl text-slate-800 mb-2">Content Versheid & Actualiteit</h4>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Blijf relevant in een snel veranderende wereld. Demonstreer actualiteit met up-to-date content, essentieel om zowel gebruikers als AI-systemen te tonen dat jouw informatie vers en waardevol is.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* CTA na de criteria */}
+          <div className="mt-12 lg:mt-16 text-center">
+            <Button 
+              size="lg"
+              className="h-14 text-lg px-10 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white font-semibold shadow-lg transform transition-all duration-150 ease-in-out hover:scale-105"
+              onClick={() => {
+                const urlInput = document.getElementById('url');
+                if (urlInput) {
+                  urlInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  urlInput.focus();
+                }
+              }}
+            >
+              Test Jouw Website Nu!
+            </Button>
+          </div>
+
+          <Separator className="my-12 lg:my-16" />
+
+          {/* Footer */}
+          <footer className="text-center text-steel text-sm">
+            <div className="space-x-4 mb-4">
+              <a href="/voorwaarden" className="hover:text-midnight">
+                Gebruiksvoorwaarden
+              </a>
+              <a href="/privacy" className="hover:text-midnight">
+                Privacy
+              </a>
+              <a href="/contact" className="hover:text-midnight">
+                Contact
+              </a>
+            </div>
+            <p>© 2024 GEO Scanner. Alle rechten voorbehouden.</p>
+          </footer>
         </div>
-
-        <div className="grid grid-cols-1 gap-4">
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">🔍</span>
-              <h3 className="font-semibold text-lg text-midnight">Crawl-toegang</h3>
-            </div>
-            <p className="text-steel">
-              Kan Google en andere zoekmachines mijn website goed vinden en lezen? Dit criterium
-              kijkt of je website toegankelijk is voor zoekmachines, zodat je gevonden kunt worden.
-            </p>
-          </div>
-
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">🔄</span>
-              <h3 className="font-semibold text-lg text-midnight">Structured Data</h3>
-            </div>
-            <p className="text-steel">
-              Begrijpen zoekmachines waar mijn pagina over gaat? Dit controleert of je extra
-              informatie hebt toegevoegd, zodat zoekmachines en AI je pagina beter snappen.
-            </p>
-          </div>
-
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">❓</span>
-              <h3 className="font-semibold text-lg text-midnight">Answer-ready content</h3>
-            </div>
-            <p className="text-steel">
-              Geeft mijn pagina direct antwoord op vragen van bezoekers? Dit kijkt of je teksten
-              duidelijk en direct antwoord geven, zodat je kans maakt op een prominente plek in
-              zoekresultaten.
-            </p>
-          </div>
-
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">🏆</span>
-              <h3 className="font-semibold text-lg text-midnight">Autoriteit & citaties</h3>
-            </div>
-            <p className="text-steel">
-              Komt mijn website betrouwbaar en deskundig over? Dit criterium meet of je pagina
-              verwijzingen of citaties bevat, wat je betrouwbaarheid vergroot.
-            </p>
-          </div>
-
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">🕒</span>
-              <h3 className="font-semibold text-lg text-midnight">Versheid</h3>
-            </div>
-            <p className="text-steel">
-              Is de informatie op mijn website actueel? Dit controleert of je pagina recent is
-              bijgewerkt, zodat bezoekers en zoekmachines weten dat de informatie up-to-date is.
-            </p>
-          </div>
-
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">🌐</span>
-              <h3 className="font-semibold text-lg text-midnight">Cross-web footprint</h3>
-            </div>
-            <p className="text-steel">
-              Wordt mijn content ook op andere plekken op het internet genoemd? Dit kijkt of je
-              website of content ook op andere relevante websites of platforms te vinden is.
-            </p>
-          </div>
-
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">👁️</span>
-              <h3 className="font-semibold text-lg text-midnight">Multimodale leesbaarheid</h3>
-            </div>
-            <p className="text-steel">
-              Is mijn website goed te begrijpen voor iedereen, ook voor mensen met een beperking?
-              Dit criterium kijkt of je pagina duidelijk is, met bijvoorbeeld goede afbeeldingen,
-              video's en teksten.
-            </p>
-          </div>
-
-          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="flex items-center mb-2">
-              <span className="text-2xl mr-3">📊</span>
-              <h3 className="font-semibold text-lg text-midnight">Monitoring-haakjes</h3>
-            </div>
-            <p className="text-steel">
-              Kan ik meten hoe goed mijn website presteert? Dit controleert of je tools hebt
-              geïnstalleerd om te zien hoeveel bezoekers je hebt en hoe je pagina's scoren.
-            </p>
-          </div>
-        </div>
-
-        <Separator className="my-8" />
-
-        {/* Footer */}
-        <footer className="text-center text-steel text-sm">
-          <div className="space-x-4 mb-4">
-            <a href="/voorwaarden" className="hover:text-midnight">
-              Gebruiksvoorwaarden
-            </a>
-            <a href="/privacy" className="hover:text-midnight">
-              Privacy
-            </a>
-            <a href="/contact" className="hover:text-midnight">
-              Contact
-            </a>
-          </div>
-          <p>© 2024 GEO Scanner. Alle rechten voorbehouden.</p>
-        </footer>
-      </div>
+      </section>
     </div>
   );
 }
