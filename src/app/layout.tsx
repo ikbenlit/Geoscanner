@@ -5,7 +5,7 @@ import './globals.css'; // Behoud globale stijlen hier
 
 export const metadata: Metadata = {
   title: 'GEO Scanner',
-  description: 'Analyseer en optimaliseer uw website voor Google E-A-T',
+  description: 'Analyseer en optimaliseer uw website voor AI-zoekmachines',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
