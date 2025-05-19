@@ -26,9 +26,9 @@ export function middleware(request: NextRequest) {
   const isPublicPath = PUBLIC_PATHS.some(path => pathname.startsWith(path));
 
   // Redirect naar login als er geen sessie is en het pad niet publiek is
-  if (!session && !isPublicPath) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  // if (!session && !isPublicPath) {
+  //   return NextResponse.redirect(new URL('/login', request.url));
+  // }
 
   // Als we hier zijn, gaat de gebruiker door naar de gewenste pagina
   // Nu passen we caching toe gebaseerd op de route
