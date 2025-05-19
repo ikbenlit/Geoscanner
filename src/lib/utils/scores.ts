@@ -36,11 +36,11 @@ export const getStatusColor = (status: Status): string => {
 export const getStatusLabel = (status: Status): string => {
   switch (status) {
     case 'success':
-      return 'Voltooid';
+      return 'Goed';
     case 'warning':
-      return 'In Uitvoering';
+      return 'Aandacht Nodig';
     case 'danger':
-      return 'Niet Gestart';
+      return 'Actie Vereist';
     default:
       return 'Onbekend';
   }

@@ -7,21 +7,24 @@ const mockModules = [
     id: '1',
     name: 'Test Module 1',
     score: 75,
-    status: 'completed' as const,
+    maxScore: 100,
+    status: 'success' as const,
     lastUpdated: '2024-03-20'
   },
   {
     id: '2',
     name: 'Test Module 2',
     score: 45,
-    status: 'in-progress' as const,
+    maxScore: 100,
+    status: 'warning' as const,
     lastUpdated: '2024-03-19'
   },
   {
     id: '3',
     name: 'Test Module 3',
     score: 0,
-    status: 'not-started' as const,
+    maxScore: 100,
+    status: 'danger' as const,
     lastUpdated: '2024-03-18'
   }
 ];

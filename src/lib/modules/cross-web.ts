@@ -199,53 +199,60 @@ function analyzeExternalMentions(html: string, hostname: string): CrossWebResult
     otherPlatforms: [] as string[]
   };
   
-  // In een echte implementatie zou dit externe API's aanroepen om te controleren
-  // of de website wordt genoemd op deze platforms.
-  // Voor deze demo simuleren we dit met een eenvoudige check.
-  
-  // Controleer op Wikipedia vermelding (simulatie)
-  result.hasWikipedia = hostname.includes('example') || hostname.includes('bekende-site');
-  
-  // Controleer op Wikidata vermelding (simulatie)
-  result.hasWikidata = hostname.includes('example');
-  
-  // Voeg enkele willekeurige andere platforms toe
-  const platforms = ['Crunchbase', 'GitHub', 'Meetup', 'ProductHunt'];
-  if (hostname.includes('example')) {
-    result.otherPlatforms = platforms.slice(0, 2);
-  } else if (hostname.length > 10) {
-    result.otherPlatforms = [platforms[0]];
+  try {
+    // Echte API call voor externe vermeldingen 
+    // Gebruik de externe verwijzingsdata API van de backend
+    const response = fetch(`/api/references/external-mentions?hostname=${encodeURIComponent(hostname)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(async (res) => {
+      if (!res.ok) return result;
+      
+      const data = await res.json();
+      result.hasWikipedia = data.hasWikipedia || false;
+      result.hasWikidata = data.hasWikidata || false;
+      result.otherPlatforms = data.otherPlatforms || [];
+    })
+    .catch(err => {
+      console.error('Fout bij ophalen externe vermeldingen:', err);
+    });
+  } catch (error) {
+    console.error('Fout bij analyseExternalMentions:', error);
   }
   
   return result;
 }
 
 function simulateBacklinksAnalysis(hostname: string): CrossWebResult['details']['backlinks'] {
-  // In een echte implementatie zou dit een API aanroepen naar een dienst zoals
-  // Moz, Ahrefs, SEMrush, of Majestic om backlinks te analyseren.
-  // Voor deze demo simuleren we dit.
-  
   const result = {
     count: 0,
     authorityDomains: [] as string[]
   };
   
-  // Simuleer aantal backlinks gebaseerd op hostname
-  if (hostname.includes('example')) {
-    result.count = 25;
-    result.authorityDomains = [
-      'trusteddomain.com',
-      'highauthority.org',
-      'expertwebsite.nl'
-    ];
-  } else if (hostname.includes('test') || hostname.includes('demo')) {
-    result.count = 8;
-    result.authorityDomains = ['moderatedomain.com'];
-  } else {
-    result.count = Math.floor(hostname.length / 3);
-    if (result.count > 5) {
-      result.authorityDomains = ['somedomain.com'];
-    }
+  try {
+    // Echte API call om backlinks te analyseren
+    // Gebruik een backlinkservice zoals Moz/Ahrefs/SEMrush via een backend API
+    const response = fetch(`/api/references/backlinks?hostname=${encodeURIComponent(hostname)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(async (res) => {
+      if (!res.ok) return result;
+      
+      const data = await res.json();
+      result.count = data.count || 0;
+      result.authorityDomains = data.authorityDomains || [];
+    })
+    .catch(err => {
+      console.error('Fout bij ophalen backlinks:', err);
+    });
+  } catch (error) {
+    console.error('Fout bij analyseBacklinks:', error);
   }
   
   return result;

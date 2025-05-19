@@ -83,4 +83,4 @@ alwaysApply: false
 - Maak gebruik van dependency injection
 - Implementeer SOLID principes
 
-
+When running command prompts use Windows PowerShell syntax 

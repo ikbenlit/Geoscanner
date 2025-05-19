@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScoreCircle } from "@/components/atoms/score-circle";
 import { cn } from "@/lib/utils";
+import { getStatusFromScore } from "@/lib/utils/scores";
 
 // Type definities
 export interface ModuleScore {
@@ -33,6 +34,26 @@ interface ComparativeAnalysisProps {
   primaryScanId?: string;
   className?: string;
 }
+
+// Helper functie om status naar variant om te zetten
+const getVariantFromStatus = (status: 'success' | 'warning' | 'danger'): 'default' | 'secondary' | 'destructive' => {
+  switch (status) {
+    case 'success':
+      return 'default';
+    case 'warning':
+      return 'secondary';
+    case 'danger':
+      return 'destructive';
+    default:
+      return 'default';
+  }
+};
+
+// Helper functie om score percentage te berekenen en status te bepalen
+const calculateStatus = (score: number, maxScore: number) => {
+  const percentage = Math.round((score / maxScore) * 100);
+  return getStatusFromScore(percentage);
+};
 
 export function ComparativeAnalysis({ scans, primaryScanId, className }: ComparativeAnalysisProps) {
   // Als er geen primaryScanId is opgegeven, gebruik de meest recente scan
@@ -207,10 +228,7 @@ export function ComparativeAnalysis({ scans, primaryScanId, className }: Compara
                 <div key={module.id} className="p-4 border rounded-lg">
                   <div className="flex justify-between items-center">
                     <h3 className="font-medium text-lg">{module.name}</h3>
-                    <Badge variant={
-                      module.status === 'success' ? 'default' :
-                      module.status === 'warning' ? 'secondary' : 'destructive'
-                    }>
+                    <Badge variant={getVariantFromStatus(module.status)}>
                       {module.score}/{module.maxScore}
                     </Badge>
                   </div>
@@ -235,8 +253,8 @@ export function ComparativeAnalysis({ scans, primaryScanId, className }: Compara
                     <div 
                       className={cn(
                         "h-full rounded-full",
-                        module.status === 'success' ? 'bg-green-500' :
-                        module.status === 'warning' ? 'bg-amber-500' : 'bg-red-500'
+                        getVariantFromStatus(module.status) === 'default' ? 'bg-green-500' :
+                        getVariantFromStatus(module.status) === 'secondary' ? 'bg-amber-500' : 'bg-red-500'
                       )}
                       style={{ width: `${(module.score / module.maxScore) * 100}%` }}
                     ></div>

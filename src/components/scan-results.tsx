@@ -24,6 +24,11 @@ import { DetailedAnalysis } from "@/components/results/DetailedAnalysis/Detailed
 import { AnswerReadyResult } from "@/lib/modules/answer-ready";
 import { AuthorityResult } from "@/lib/modules/authority";
 import { FreshnessResult } from "@/lib/modules/freshness";
+import { CrossWebResult } from "@/lib/modules/cross-web";
+import { MultimodalResult } from "@/lib/modules/multimodal";
+import { MonitoringResult } from "@/lib/modules/monitoring";
+import { SchemaAdvancedResult } from "@/lib/modules/schema-advanced";
+import { getStatusFromScore } from "@/lib/utils/scores";
 
 type Status = 'success' | 'warning' | 'danger';
 
@@ -73,11 +78,28 @@ interface ScanResultsProps {
     answerReady: AnswerReadyResult | null;
     authority: AuthorityResult | null;
     freshness: FreshnessResult | null;
+    crossWeb: CrossWebResult | null;
+    multimodal: MultimodalResult | null;
+    monitoring: MonitoringResult | null;
+    schemaAdvanced: SchemaAdvancedResult | null;
   };
   onNewScan: () => void;
 }
 
 export function ScanResults({ result, onNewScan }: ScanResultsProps) {
+  // Helper functie om module object te maken met dynamisch berekende status
+  const createModuleWithCalculatedStatus = (id: string, name: string, score: number, maxScore: number) => {
+    const percentageScore = Math.round((score / maxScore) * 100);
+    return {
+      id,
+      name,
+      score,
+      maxScore,
+      status: getStatusFromScore(percentageScore),
+      lastUpdated: new Date().toISOString()
+    };
+  };
+
   const getStatusColor = (status: Status) => {
     switch (status) {
       case 'success':
@@ -704,70 +726,72 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
 
       <ModuleOverview 
         modules={[
-          {
-            id: "crawl-access",
-            name: "Crawl-toegang",
-            score: result.modules.find(m => m.id === "crawl-access")?.score || 0,
-            maxScore: result.modules.find(m => m.id === "crawl-access")?.maxScore || 25,
-            status: result.modules.find(m => m.id === "crawl-access")?.status || "warning",
-            lastUpdated: new Date().toISOString()
-          },
-          {
-            id: "structured-data",
-            name: "Structured Data",
-            score: result.modules.find(m => m.id === "structured-data")?.score || 0,
-            maxScore: result.modules.find(m => m.id === "structured-data")?.maxScore || 25,
-            status: result.modules.find(m => m.id === "structured-data")?.status || "warning",
-            lastUpdated: new Date().toISOString()
-          },
-          {
-            id: "content-analysis",
-            name: "Content Analyse",
-            score: result.modules.find(m => m.id === "content-analysis")?.score || 0,
-            maxScore: result.modules.find(m => m.id === "content-analysis")?.maxScore || 25,
-            status: result.modules.find(m => m.id === "content-analysis")?.status || "warning",
-            lastUpdated: new Date().toISOString()
-          },
-          {
-            id: "technical-seo",
-            name: "Technical SEO",
-            score: result.modules.find(m => m.id === "technical-seo")?.score || 0,
-            maxScore: result.modules.find(m => m.id === "technical-seo")?.maxScore || 25,
-            status: result.modules.find(m => m.id === "technical-seo")?.status || "warning",
-            lastUpdated: new Date().toISOString()
-          },
-          {
-            id: "answer-ready",
-            name: "Answer-ready content",
-            score: result.modules.find(m => m.id === "answer-ready")?.score || 0,
-            maxScore: result.modules.find(m => m.id === "answer-ready")?.maxScore || 20,
-            status: result.modules.find(m => m.id === "answer-ready")?.status || "warning",
-            lastUpdated: new Date().toISOString()
-          },
-          {
-            id: "authority",
-            name: "Autoriteit & citaties",
-            score: result.modules.find(m => m.id === "authority")?.score || 0,
-            maxScore: result.modules.find(m => m.id === "authority")?.maxScore || 15,
-            status: result.modules.find(m => m.id === "authority")?.status || "warning",
-            lastUpdated: new Date().toISOString()
-          },
-          {
-            id: "freshness",
-            name: "Versheid",
-            score: result.modules.find(m => m.id === "freshness")?.score || 0,
-            maxScore: result.modules.find(m => m.id === "freshness")?.maxScore || 10,
-            status: result.modules.find(m => m.id === "freshness")?.status || "warning",
-            lastUpdated: new Date().toISOString()
-          },
-          {
-            id: "cross-web",
-            name: "Cross-web footprint",
-            score: 0,
-            maxScore: 25,
-            status: "warning",
-            lastUpdated: new Date().toISOString()
-          }
+          createModuleWithCalculatedStatus(
+            "crawl-access",
+            "Crawl-toegang",
+            result.modules.find(m => m.id === "crawl-access")?.score || 0,
+            result.modules.find(m => m.id === "crawl-access")?.maxScore || 25
+          ),
+          createModuleWithCalculatedStatus(
+            "structured-data",
+            "Structured Data",
+            result.modules.find(m => m.id === "structured-data")?.score || 0,
+            result.modules.find(m => m.id === "structured-data")?.maxScore || 25
+          ),
+          createModuleWithCalculatedStatus(
+            "content-analysis",
+            "Content Analyse",
+            result.modules.find(m => m.id === "content-analysis")?.score || 0,
+            result.modules.find(m => m.id === "content-analysis")?.maxScore || 25
+          ),
+          createModuleWithCalculatedStatus(
+            "technical-seo",
+            "Technical SEO",
+            result.modules.find(m => m.id === "technical-seo")?.score || 0,
+            result.modules.find(m => m.id === "technical-seo")?.maxScore || 25
+          ),
+          createModuleWithCalculatedStatus(
+            "answer-ready",
+            "Answer-ready content",
+            result.modules.find(m => m.id === "answer-ready")?.score || 0,
+            result.modules.find(m => m.id === "answer-ready")?.maxScore || 20
+          ),
+          createModuleWithCalculatedStatus(
+            "authority",
+            "Autoriteit & citaties",
+            result.modules.find(m => m.id === "authority")?.score || 0,
+            result.modules.find(m => m.id === "authority")?.maxScore || 15
+          ),
+          createModuleWithCalculatedStatus(
+            "freshness",
+            "Versheid",
+            result.modules.find(m => m.id === "freshness")?.score || 0,
+            result.modules.find(m => m.id === "freshness")?.maxScore || 10
+          ),
+          createModuleWithCalculatedStatus(
+            "cross-web",
+            "Cross-web footprint",
+            result.modules.find(m => m.id === "cross-web")?.score || 0,
+            result.modules.find(m => m.id === "cross-web")?.maxScore || 10
+          ),
+          createModuleWithCalculatedStatus(
+            "multimodal",
+            "Multimodale leesbaarheid",
+            result.modules.find(m => m.id === "multimodal")?.score || 0,
+            result.modules.find(m => m.id === "multimodal")?.maxScore || 5
+          ),
+          createModuleWithCalculatedStatus(
+            "monitoring",
+            "Monitoring-haakjes",
+            result.modules.find(m => m.id === "monitoring")?.score || 0,
+            result.modules.find(m => m.id === "monitoring")?.maxScore || 5
+          ),
+          createModuleWithCalculatedStatus(
+            "schema-advanced",
+            "Schema.org analyse",
+            result.modules.find(m => m.id === "schema-advanced")?.score || 0,
+            result.modules.find(m => m.id === "schema-advanced")?.maxScore || 15
+          )
         ]}
       />
 
@@ -868,9 +892,53 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
             id: "cross-web",
             title: "Cross-web footprint",
             description: "Wordt mijn content ook op andere plekken op het internet genoemd?",
-            codeSnippets: [],
-            currentScore: 0,
-            predictedScore: 25
+            codeSnippets: result.crossWeb?.fixes.map(fix => ({
+              id: fix.description,
+              language: "html",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.crossWeb?.score || 0,
+            predictedScore: result.crossWeb?.maxScore || 0
+          },
+          {
+            id: "multimodal",
+            title: "Multimodale leesbaarheid",
+            description: "Is mijn content toegankelijk voor alle gebruikers en apparaten?",
+            codeSnippets: result.multimodal?.fixes.map(fix => ({
+              id: fix.description,
+              language: "html",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.multimodal?.score || 0,
+            predictedScore: result.multimodal?.maxScore || 0
+          },
+          {
+            id: "monitoring",
+            title: "Monitoring-haakjes",
+            description: "Kan ik mijn website goed monitoren op fouten en gebruikersgedrag?",
+            codeSnippets: result.monitoring?.fixes.map(fix => ({
+              id: fix.description,
+              language: "javascript",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.monitoring?.score || 0,
+            predictedScore: result.monitoring?.maxScore || 0
+          },
+          {
+            id: "schema-advanced",
+            title: "Schema.org analyse",
+            description: "Is mijn schema markup geoptimaliseerd voor maximale vindbaarheid?",
+            codeSnippets: result.schemaAdvanced?.fixes.map(fix => ({
+              id: fix.description,
+              language: "json",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.schemaAdvanced?.score || 0,
+            predictedScore: result.schemaAdvanced?.maxScore || 0
           }
         ]}
       />

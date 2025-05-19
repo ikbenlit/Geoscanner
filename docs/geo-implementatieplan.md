@@ -152,9 +152,9 @@
 - [x] Semantische coherentie analyse
 - [x] Schema hiërarchie optimalisatie
 
-### 4.3 Performance Optimalisatie 🔴
-- [ ] Edge caching implementatie
-- [ ] Serverless function optimalisatie
+### 4.3 Performance Optimalisatie 🟡
+- [x] Edge caching implementatie
+- [x] Serverless function optimalisatie
 - [ ] Database query optimalisatie
 - [ ] Frontend performance verbeteringen
 

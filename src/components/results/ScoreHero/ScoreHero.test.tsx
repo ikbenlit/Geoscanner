@@ -9,6 +9,7 @@ describe('ScoreHero', () => {
         score={75}
         totalModules={10}
         completedModules={7}
+        url="https://voorbeeld.nl"
       />
     );
 
@@ -23,6 +24,7 @@ describe('ScoreHero', () => {
         previousScore={70}
         totalModules={10}
         completedModules={8}
+        url="https://voorbeeld.nl"
       />
     );
 
@@ -36,6 +38,7 @@ describe('ScoreHero', () => {
         score={60}
         totalModules={5}
         completedModules={3}
+        url="https://voorbeeld.nl"
       />
     );
 
@@ -48,6 +51,7 @@ describe('ScoreHero', () => {
         score={85}
         totalModules={10}
         completedModules={8}
+        url="https://voorbeeld.nl"
       />
     );
     expect(screen.getByText('Excellent')).toBeInTheDocument();
@@ -57,8 +61,9 @@ describe('ScoreHero', () => {
         score={35}
         totalModules={10}
         completedModules={3}
+        url="https://voorbeeld.nl"
       />
     );
-    expect(screen.getByText('Kritiek')).toBeInTheDocument();
+    expect(screen.getByText('Actie Vereist')).toBeInTheDocument();
   });
 }); 

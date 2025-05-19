@@ -89,7 +89,12 @@ export class Scanner {
       const response = await fetch(url, {
         signal: controller.signal,
         headers: {
-          'User-Agent': 'GEO-Scanner/1.0 (https://geoscanner.nl)'
+          'User-Agent': 'GEO-Scanner/1.0 (https://geoscanner.nl)',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'nl,en-US;q=0.7,en;q=0.3',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Cache-Control': 'max-age=0'
         }
       });
       clearTimeout(timeoutId);
@@ -104,7 +109,7 @@ export class Scanner {
     try {
       const parsed = parseUrl(baseUrl);
       const robotsUrl = `${parsed.protocol}//${parsed.host}/robots.txt`;
-      const response = await this.fetchWithTimeout(robotsUrl);
+      const response = await this.fetchWithTimeout(robotsUrl, 3000);
       
       if (response.ok) {
         return await response.text();
@@ -119,7 +124,7 @@ export class Scanner {
     try {
       const parsed = parseUrl(baseUrl);
       const sitemapUrl = `${parsed.protocol}//${parsed.host}/sitemap.xml`;
-      const response = await this.fetchWithTimeout(sitemapUrl);
+      const response = await this.fetchWithTimeout(sitemapUrl, 3000);
       
       if (response.ok) {
         return await response.text();
@@ -132,7 +137,7 @@ export class Scanner {
 
   private static async fetchHtml(url: string): Promise<string | null> {
     try {
-      const response = await this.fetchWithTimeout(url);
+      const response = await this.fetchWithTimeout(url, 8000);
       
       if (response.ok) {
         return await response.text();
@@ -282,68 +287,56 @@ export class Scanner {
 
   public static async scan(url: string, options: ScanOptions = { fullDomainScan: false }): Promise<CrawlResult> {
     if (!this.isValidUrl(url)) {
-      return {
-        url,
-        robotsTxt: null,
-        sitemapData: null,
-        htmlSnapshot: null,
-        crawlAccess: null,
-        structuredData: null,
-        contentAnalysis: null,
-        technicalSeo: null,
-        answerReady: null,
-        authority: null,
-        freshness: null,
-        crossWeb: null,
-        multimodal: null,
-        monitoring: null,
-        schemaAdvanced: null
-      };
+      return this.getEmptyCrawlResult(url);
     }
 
     try {
+      // Parallelle data fetching met Promise.all voor betere performance
+      console.time('scan'); // Timing voor performance tracking
+      
       const [robotsTxt, sitemapXml, html] = await Promise.all([
         this.fetchRobotsTxt(url),
         this.fetchSitemapXml(url),
         this.fetchHtml(url)
       ]);
+      
+      console.timeLog('scan', 'Data fetching complete');
 
       const robotsRules = robotsTxt ? this.parseRobotsTxt(robotsTxt) : null;
       const sitemapData = sitemapXml ? this.parseSitemapXml(sitemapXml) : null;
       const htmlSnapshot = html ? this.createHtmlSnapshot(html) : null;
-
-      // Analyseer crawl access
-      const crawlAccess = analyzeCrawlAccess(robotsRules, sitemapData, htmlSnapshot, 200);
-
-      // Analyseer structured data
-      const structuredData = htmlSnapshot ? analyzeStructuredData(htmlSnapshot) : null;
-
-      // Analyseer content
-      const contentAnalysis = htmlSnapshot ? analyzeContent(htmlSnapshot) : null;
-
-      // Analyseer technical SEO
-      const technicalSeo = htmlSnapshot ? analyzeTechnicalSeo(htmlSnapshot) : null;
       
-      // Analyseer answer-ready content
-      const answerReady = htmlSnapshot ? analyzeAnswerReady(htmlSnapshot) : null;
+      console.timeLog('scan', 'Parsing complete');
+
+      // Analyse modules in batches uitvoeren voor betere performance
+      // Batch 1: Basis analyses die door meerdere andere analyses worden gebruikt
+      const [crawlAccess, structuredData, contentAnalysis] = await Promise.all([
+        Promise.resolve(analyzeCrawlAccess(robotsRules, sitemapData, htmlSnapshot, 200)), 
+        Promise.resolve(htmlSnapshot ? analyzeStructuredData(htmlSnapshot) : null),
+        Promise.resolve(htmlSnapshot ? analyzeContent(htmlSnapshot) : null)
+      ]);
       
-      // Analyseer autoriteit en citaties
-      const authority = htmlSnapshot ? analyzeAuthority(htmlSnapshot) : null;
+      console.timeLog('scan', 'Batch 1 complete');
+
+      // Batch 2: Analyses die Batch 1 resultaten kunnen gebruiken
+      const [technicalSeo, answerReady, authority] = await Promise.all([
+        Promise.resolve(htmlSnapshot ? analyzeTechnicalSeo(htmlSnapshot) : null),
+        Promise.resolve(htmlSnapshot ? analyzeAnswerReady(htmlSnapshot) : null),
+        Promise.resolve(htmlSnapshot ? analyzeAuthority(htmlSnapshot) : null)
+      ]);
       
-      // Analyseer content versheid
-      const freshness = htmlSnapshot ? analyzeFreshness(htmlSnapshot, sitemapData, url) : null;
+      console.timeLog('scan', 'Batch 2 complete');
 
-      // Analyseer cross-web
-      const crossWeb = htmlSnapshot ? analyzeCrossWeb(htmlSnapshot, url) : null;
-
-      // Analyseer multimodal
-      const multimodal = htmlSnapshot ? analyzeMultimodal(htmlSnapshot) : null;
-
-      // Analyseer monitoring
-      const monitoring = htmlSnapshot ? analyzeMonitoring(htmlSnapshot) : null;
-
-      // Analyseer schema advanced
-      const schemaAdvanced = htmlSnapshot ? analyzeSchemaAdvanced(htmlSnapshot) : null;
+      // Batch 3: Overige analyses
+      const [freshness, crossWeb, multimodal, monitoring, schemaAdvanced] = await Promise.all([
+        Promise.resolve(htmlSnapshot ? analyzeFreshness(htmlSnapshot, sitemapData, url) : null),
+        Promise.resolve(htmlSnapshot ? analyzeCrossWeb(htmlSnapshot, url) : null),
+        Promise.resolve(htmlSnapshot ? analyzeMultimodal(htmlSnapshot) : null),
+        Promise.resolve(htmlSnapshot ? analyzeMonitoring(htmlSnapshot) : null),
+        Promise.resolve(htmlSnapshot ? analyzeSchemaAdvanced(htmlSnapshot) : null)
+      ]);
+      
+      console.timeEnd('scan');
 
       return {
         url,
@@ -363,23 +356,28 @@ export class Scanner {
         schemaAdvanced
       };
     } catch (error) {
-      return {
-        url,
-        robotsTxt: null,
-        sitemapData: null,
-        htmlSnapshot: null,
-        crawlAccess: null,
-        structuredData: null,
-        contentAnalysis: null,
-        technicalSeo: null,
-        answerReady: null,
-        authority: null,
-        freshness: null,
-        crossWeb: null,
-        multimodal: null,
-        monitoring: null,
-        schemaAdvanced: null
-      };
+      console.error('Scan error:', error);
+      return this.getEmptyCrawlResult(url);
     }
+  }
+
+  private static getEmptyCrawlResult(url: string): CrawlResult {
+    return {
+      url,
+      robotsTxt: null,
+      sitemapData: null,
+      htmlSnapshot: null,
+      crawlAccess: null,
+      structuredData: null,
+      contentAnalysis: null,
+      technicalSeo: null,
+      answerReady: null,
+      authority: null,
+      freshness: null,
+      crossWeb: null,
+      multimodal: null,
+      monitoring: null,
+      schemaAdvanced: null
+    };
   }
 } 

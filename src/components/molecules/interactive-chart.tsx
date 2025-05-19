@@ -16,7 +16,13 @@ import {
   AreaChart,
   ComposedChart
 } from 'recharts';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -234,7 +240,7 @@ export function InteractiveChart({ data, title = 'Score Trend', className }: Int
                 <Bar
                   key={module.id}
                   dataKey="score"
-                  data={sortedData.filter(item => item.moduleId === module.id)}
+                  data={sortedData.filter(item => item.moduleId === module.id) as any}
                   name={module.name}
                   fill={getModuleColor(module.id)}
                 />
