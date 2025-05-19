@@ -16,6 +16,7 @@ import { TechnicalSeoResult } from '@/lib/modules/technical-seo';
 import { ScoreCircle } from "@/components/atoms/score-circle";
 import { ModuleCard } from "@/components/molecules/module-card";
 import { ModuleRadarChart } from "@/components/molecules/radar-chart";
+import { QuickWinCard } from "@/components/molecules/quick-win-card";
 
 type Status = 'success' | 'warning' | 'danger';
 
@@ -656,10 +657,10 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
                   {technicalSeo.fixes.map((fix, index) => (
                     <div key={index} className="p-3 bg-muted rounded">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium">{fix.title}</span>
+                        <span className="font-medium">{fix.description}</span>
                         <Badge variant="secondary">{fix.impact}</Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{fix.description}</p>
+                      <p className="text-sm text-muted-foreground">{fix.fix}</p>
                     </div>
                   ))}
                 </div>
@@ -699,6 +700,21 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
               <ModuleCard key={module.id} module={module} />
             ))}
           </div>
+
+          {/* Quick Wins Section */}
+          {result.quickWins.length > 0 && (
+            <>
+              <Separator className="my-6" />
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Quick Wins</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {result.quickWins.map((win, index) => (
+                    <QuickWinCard key={index} {...win} />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           <Separator className="my-6" />
 
