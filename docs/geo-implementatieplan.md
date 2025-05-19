@@ -22,11 +22,39 @@
 - [x] Database (Vercel Postgres) setup
 - [ ] Redis (Upstash) configuratie (uitgesteld naar v1.1)
 
-### 1.3 Authenticatie & User Management 🟡
-- [x] Firebase Authentication integratie
-- [ ] Auth middleware setup
-- [ ] User model implementatie
-- [ ] Login/Register flows
+### 1.3 Authenticatie & User Management 🟢
+#### 1.3.1 Firebase Setup 🟢
+- [x] Firebase Authentication integratie (anonymous login)
+- [x] Firebase project configuratie
+- [x] Environment variabelen setup
+- [x] Anonymous provider configuratie
+
+#### 1.3.2 Database & Models ⚪
+- [ ] (Niet nodig voor MVP: gebruikersdata wordt niet opgeslagen, alleen anonieme login)
+- [ ] (Kan in v1.1 worden toegevoegd indien gebruikersdata/persoonlijke rapportages nodig zijn)
+
+#### 1.3.3 Auth Functionaliteit 🟢
+- [x] Auth middleware setup (basis)
+- [x] Login pagina (anoniem)
+- [x] Basis error handling
+
+#### 1.3.4 Security 🟢
+- [x] Form validatie (niet van toepassing bij anonieme login)
+- [x] Basis security rules
+- [x] Input sanitization
+
+#### Uitgesteld naar v1.1 ⚪
+- [ ] Social login (Google, GitHub)
+- [ ] Email/password login
+- [ ] Register pagina
+- [ ] Logout functionaliteit
+- [ ] Email verificatie
+- [ ] Wachtwoord reset
+- [ ] Uitgebreide session management
+- [ ] Firebase Admin SDK
+- [ ] Uitgebreide monitoring
+- [ ] CI/CD voor auth
+- [ ] Uitgebreide testing
 
 ## Fase 2: Core Functionaliteit (Week 3-4) 🟡
 
@@ -36,17 +64,29 @@
 - [x] Voortgangsindicator
 - [x] Basis resultaatweergave
 
-### 2.2 URL Scanner Module 🟡
+### 2.2 URL Scanner Module 🟢
 - [x] URL validatie implementatie
 - [x] Crawler component ontwikkeling
-- [ ] Robots.txt & sitemap parser
-- [ ] HTML snapshot functionaliteit
+- [x] Robots.txt & sitemap parser
+- [x] HTML snapshot functionaliteit
 
-### 2.3 Analyse Modules 1-2 🔴
-- [ ] Module 1: Crawl-toegang implementatie
-- [ ] Module 2: Structured Data analyse
-- [ ] Parallelle verwerking setup
-- [ ] Resultaat aggregatie
+### 2.3 Analysis Modules
+- [x] Module 1: Crawl-access
+  - [x] Robots.txt regels voor AI bots
+  - [x] Sitemap.xml aanwezigheid en validiteit
+  - [x] HTTP status codes en meta-robots tags
+- [ ] Module 2: Structured Data
+  - [ ] JSON-LD validatie
+  - [ ] Schema.org compliance check
+  - [ ] Open Graph tags analyse
+- [ ] Module 3: Content Analysis
+  - [ ] Taal detectie
+  - [ ] Keyword analyse
+  - [ ] Duplicate content check
+- [ ] Module 4: Technical SEO
+  - [ ] Performance metrics
+  - [ ] Mobile-friendliness
+  - [ ] Security headers
 
 ## Fase 3: Uitgebreide Functionaliteit (Week 5-6)
 

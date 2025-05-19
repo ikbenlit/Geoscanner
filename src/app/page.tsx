@@ -103,8 +103,25 @@ export default function Home() {
   const [scanResult, setScanResult] = useState<any>(null);
   const { toast } = useToast();
 
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidUrl(url)) {
+      toast({
+        title: "Ongeldige URL",
+        description: "Voer een geldige URL in (inclusief http(s)://)",
+        variant: "destructive",
+      });
+      return;
+    }
     setIsScanning(true);
     setProgress(0);
 
