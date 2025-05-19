@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Copy, Check } from 'lucide-react';
 import { QuickWin } from '@/lib/types/results';
 import { useClipboard } from '@/lib/utils/clipboard';
-import { getStatusColor, getImpactColor } from '@/lib/utils/scores';
+import { getImpactColor } from '@/lib/utils/scores';
 
 interface QuickWinsPanelProps {
   quickWins: QuickWin[];

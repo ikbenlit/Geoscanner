@@ -7,7 +7,6 @@ import {
   PolarRadiusAxis,
   Radar,
   ResponsiveContainer,
-  Text,
 } from 'recharts';
 import { cn } from '@/lib/utils';
 import { getStatusFromScore } from '@/lib/utils/scores';

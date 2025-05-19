@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { isNewUIEnabled, toggleNewUI as toggleNewUIFunc } from '@/lib/features';
+import { toggleNewUI as toggleNewUIFunc } from '@/lib/features';
 
 /**
  * Hook voor het gebruik van feature flags in componenten
