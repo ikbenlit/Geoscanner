@@ -56,7 +56,7 @@
 - [ ] CI/CD voor auth
 - [ ] Uitgebreide testing
 
-## Fase 2: Core Functionaliteit (Week 3-4) 🟡
+## Fase 2: Core Functionaliteit (Week 3-4) 🟢
 
 ### 2.1 Basis UI Implementatie 🟢
 - [x] Design system componenten
@@ -70,7 +70,7 @@
 - [x] Robots.txt & sitemap parser
 - [x] HTML snapshot functionaliteit
 
-### 2.3 Analysis Modules 🟡
+### 2.3 Analysis Modules 🟢
 - [x] Module 1: Crawl-access
   - [x] Robots.txt regels voor AI bots
   - [x] Sitemap.xml aanwezigheid en validiteit
@@ -98,53 +98,71 @@
 
 ## Fase 3: Uitgebreide Functionaliteit (Week 5-6) 🟡
 
-### 3.1 Analyse Modules 3-5 🟡
-- [ ] Module 3: Answer-ready content analyse
-  - [ ] FAQ structuur analyse
-  - [ ] Featured snippet potentie
-  - [ ] Voice search optimalisatie
-- [ ] Module 4: Autoriteit & citaties check
-  - [ ] Backlink analyse
-  - [ ] Social media presence
-  - [ ] Brand mentions
-- [ ] Module 5: Versheid analyse
-  - [ ] Content update frequentie
-  - [ ] Laatste wijzigingsdatum
-  - [ ] Content levenscyclus
+### 3.1 Analyse Modules 3-5 🟢
+- [x] Module 3: Answer-ready content analyse
+  - [x] FAQ structuur analyse
+  - [x] Featured snippet potentie
+  - [x] Voice search optimalisatie
+- [x] Module 4: Autoriteit & citaties check
+  - [x] Auteur bio en expertise analyse
+  - [x] Outbound links naar autoriteitssites
+  - [x] Licentie-informatie analyse
+- [x] Module 5: Versheid analyse
+  - [x] Publicatiedatum detectie
+  - [x] Laatste wijzigingsdatum analyse
+  - [x] Content actualiteit beoordeling
 
-### 3.2 Geavanceerde UI Componenten 🟡
-- [ ] Radar chart implementatie
-- [ ] Score cirkel component
-- [ ] Module detail panels
-- [ ] Quick wins sectie
-- [ ] Interactieve grafieken
-- [ ] Vergelijkende analyses
+### 3.2 Geavanceerde UI Componenten 🟢
+- [x] Radar chart implementatie
+- [x] Score cirkel component
+- [x] Module detail panels
+- [x] Quick wins sectie
+- [x] Interactieve grafieken
+- [x] Vergelijkende analyses
 
 ### 3.3 Rapportage Systeem 🔴
-- [ ] PDF generatie
-- [ ] JSON export
-- [ ] Rapport templates
-- [ ] White-label opties
+- [ ] PDF rapport generatie
+  - [ ] Scangegevens exporteren
+  - [ ] Template ontwerp
+  - [ ] Gegenereerde aanbevelingen
+- [ ] Email notificaties
+  - [ ] Scanstatus updates
+  - [ ] Periodieke herinneringen
+  - [ ] Verbetersuggesties
 
-## Fase 4: Uitgebreide Analyse & Optimalisatie (Week 7-8)
+## Fase 4: Uitgebreide AI-modules
 
-### 4.1 Analyse Modules 6-8 🔴
-- [ ] Module 6: Cross-web footprint analyse
-- [ ] Module 7: Multimodale leesbaarheid
-- [ ] Module 8: Monitoring-haakjes
-- [ ] Volledige module integratie
+### 4.1 Nieuwe Analysemodules 🟢
+- [x] Cross-web footprint analyse
+  - [x] SameAs links in JSON-LD
+  - [x] Externe vermeldingen op kennisgrafen
+  - [x] Backlink analyse
+- [x] Multimodale leesbaarheid
+  - [x] Alt-tekst kwaliteit check
+  - [x] Transcripts/ondertiteling controle
+  - [x] Structuur analyse
+- [x] Monitoring-haakjes
+  - [x] Analytics aanwezigheid
+  - [x] Foutregistratie
+  - [x] Privacy/consent controle
 
-### 4.2 Performance Optimalisatie 🔴
+### 4.2 Diepgaande Schema.org Analyse 🟢
+- [x] Volledigheidscontrole schema types
+- [x] Technische validatie
+- [x] Semantische coherentie analyse
+- [x] Schema hiërarchie optimalisatie
+
+### 4.3 Performance Optimalisatie 🔴
 - [ ] Edge caching implementatie
 - [ ] Serverless function optimalisatie
 - [ ] Database query optimalisatie
 - [ ] Frontend performance verbeteringen
 
-### 4.3 Gebruikersdashboard 🔴
+### 4.4 Gebruikersdashboard 🔴
 - [ ] Scan geschiedenis
 - [ ] Vergelijkende analyses
-- [ ] Gebruikersinstellingen
-- [ ] Notificatiesysteem
+- [ ] Custom rapportages
+- [ ] Team samenwerking functies
 
 ## Fase 5: Testing & Deployment (Week 9-10)
 
@@ -191,5 +209,5 @@
 - Subfases kunnen parallel worden uitgevoerd waar mogelijk
 - Status wordt bijgewerkt tijdens de ontwikkeling
 - Extra tijd is ingebouwd voor onverwachte uitdagingen
-- Prioriteit ligt momenteel op het afronden van de Technical SEO module
+- Prioriteit ligt momenteel op het afronden van de geavanceerde UI componenten (fase 3.2)
 - Nieuwe features worden toegevoegd op basis van gebruikersfeedback

@@ -17,6 +17,13 @@ import { ScoreCircle } from "@/components/atoms/score-circle";
 import { ModuleCard } from "@/components/molecules/module-card";
 import { ModuleRadarChart } from "@/components/molecules/radar-chart";
 import { QuickWinCard } from "@/components/molecules/quick-win-card";
+import { ScoreHero } from "@/components/results/ScoreHero/ScoreHero";
+import { QuickWinsPanel } from "@/components/results/QuickWinsPanel/QuickWinsPanel";
+import { ModuleOverview } from "@/components/results/ModuleOverview/ModuleOverview";
+import { DetailedAnalysis } from "@/components/results/DetailedAnalysis/DetailedAnalysis";
+import { AnswerReadyResult } from "@/lib/modules/answer-ready";
+import { AuthorityResult } from "@/lib/modules/authority";
+import { FreshnessResult } from "@/lib/modules/freshness";
 
 type Status = 'success' | 'warning' | 'danger';
 
@@ -63,6 +70,9 @@ interface ScanResultsProps {
     error?: string;
     contentAnalysis: ContentAnalysisResult | null;
     technicalSeo: TechnicalSeoResult | null;
+    answerReady: AnswerReadyResult | null;
+    authority: AuthorityResult | null;
+    freshness: FreshnessResult | null;
   };
   onNewScan: () => void;
 }
@@ -673,144 +683,197 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Scan Resultaten</CardTitle>
-          <CardDescription>Analyse van {result.url}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* Score Circle */}
-          <div className="flex justify-center mb-8">
-            <ScoreCircle 
-              score={result.overallScore} 
-              maxScore={100} 
-              size="lg" 
-            />
-          </div>
+    <div className="space-y-8">
+      <ScoreHero 
+        score={result.overallScore}
+        maxScore={100}
+        url={result.url}
+      />
 
-          {/* Radar Chart */}
-          <div className="mb-8">
-            <ModuleRadarChart modules={result.modules} />
-          </div>
+      <QuickWinsPanel 
+        quickWins={result.quickWins.map(win => ({
+          id: win.module,
+          title: win.description,
+          description: win.fix,
+          impact: win.impact,
+          estimatedTime: "5 min",
+          code: win.fix,
+          moduleId: win.module
+        }))}
+      />
 
-          {/* Module Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            {result.modules.map(module => (
-              <ModuleCard key={module.id} module={module} />
-            ))}
-          </div>
+      <ModuleOverview 
+        modules={[
+          {
+            id: "crawl-access",
+            name: "Crawl-toegang",
+            score: result.modules.find(m => m.id === "crawl-access")?.score || 0,
+            maxScore: result.modules.find(m => m.id === "crawl-access")?.maxScore || 25,
+            status: result.modules.find(m => m.id === "crawl-access")?.status || "warning",
+            lastUpdated: new Date().toISOString()
+          },
+          {
+            id: "structured-data",
+            name: "Structured Data",
+            score: result.modules.find(m => m.id === "structured-data")?.score || 0,
+            maxScore: result.modules.find(m => m.id === "structured-data")?.maxScore || 25,
+            status: result.modules.find(m => m.id === "structured-data")?.status || "warning",
+            lastUpdated: new Date().toISOString()
+          },
+          {
+            id: "content-analysis",
+            name: "Content Analyse",
+            score: result.modules.find(m => m.id === "content-analysis")?.score || 0,
+            maxScore: result.modules.find(m => m.id === "content-analysis")?.maxScore || 25,
+            status: result.modules.find(m => m.id === "content-analysis")?.status || "warning",
+            lastUpdated: new Date().toISOString()
+          },
+          {
+            id: "technical-seo",
+            name: "Technical SEO",
+            score: result.modules.find(m => m.id === "technical-seo")?.score || 0,
+            maxScore: result.modules.find(m => m.id === "technical-seo")?.maxScore || 25,
+            status: result.modules.find(m => m.id === "technical-seo")?.status || "warning",
+            lastUpdated: new Date().toISOString()
+          },
+          {
+            id: "answer-ready",
+            name: "Answer-ready content",
+            score: result.modules.find(m => m.id === "answer-ready")?.score || 0,
+            maxScore: result.modules.find(m => m.id === "answer-ready")?.maxScore || 20,
+            status: result.modules.find(m => m.id === "answer-ready")?.status || "warning",
+            lastUpdated: new Date().toISOString()
+          },
+          {
+            id: "authority",
+            name: "Autoriteit & citaties",
+            score: result.modules.find(m => m.id === "authority")?.score || 0,
+            maxScore: result.modules.find(m => m.id === "authority")?.maxScore || 15,
+            status: result.modules.find(m => m.id === "authority")?.status || "warning",
+            lastUpdated: new Date().toISOString()
+          },
+          {
+            id: "freshness",
+            name: "Versheid",
+            score: result.modules.find(m => m.id === "freshness")?.score || 0,
+            maxScore: result.modules.find(m => m.id === "freshness")?.maxScore || 10,
+            status: result.modules.find(m => m.id === "freshness")?.status || "warning",
+            lastUpdated: new Date().toISOString()
+          },
+          {
+            id: "cross-web",
+            name: "Cross-web footprint",
+            score: 0,
+            maxScore: 25,
+            status: "warning",
+            lastUpdated: new Date().toISOString()
+          }
+        ]}
+      />
 
-          {/* Quick Wins Section */}
-          {result.quickWins.length > 0 && (
-            <>
-              <Separator className="my-6" />
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Quick Wins</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  {result.quickWins.map((win, index) => (
-                    <QuickWinCard key={index} {...win} />
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          <Separator className="my-6" />
-
-          {/* Bestaande Accordion voor Details */}
-          <Accordion type="single" collapsible className="w-full">
-            {result.crawlAccess && (
-              <AccordionItem value="crawl-access">
-                <AccordionTrigger>
-                  <div className="flex items-center space-x-2">
-                    <span>Crawl-toegang</span>
-                    <span className={cn(
-                      "px-2 py-1 rounded text-xs font-medium",
-                      getStatusBgColor(result.crawlAccess.status),
-                      getStatusColor(result.crawlAccess.status)
-                    )}>
-                      {result.crawlAccess.score}/{result.crawlAccess.maxScore}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  {renderCrawlAccess(result.crawlAccess)}
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {result.structuredData && (
-              <AccordionItem value="structured-data">
-                <AccordionTrigger>
-                  <div className="flex items-center space-x-2">
-                    <span>Structured Data</span>
-                    <span className={cn(
-                      "px-2 py-1 rounded text-xs font-medium",
-                      getStatusBgColor(result.structuredData.status),
-                      getStatusColor(result.structuredData.status)
-                    )}>
-                      {result.structuredData.score}/{result.structuredData.maxScore}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  {renderStructuredData(result.structuredData)}
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {result.robotsRules && (
-              <AccordionItem value="robots">
-                <AccordionTrigger>Robots.txt</AccordionTrigger>
-                <AccordionContent>
-                  {renderRobotsRules(result.robotsRules)}
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {result.sitemapData && (
-              <AccordionItem value="sitemap">
-                <AccordionTrigger>Sitemap.xml</AccordionTrigger>
-                <AccordionContent>
-                  {renderSitemapData(result.sitemapData)}
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {result.htmlSnapshot && (
-              <AccordionItem value="html">
-                <AccordionTrigger>HTML Snapshot</AccordionTrigger>
-                <AccordionContent>
-                  {renderHtmlSnapshot(result.htmlSnapshot)}
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {result.contentAnalysis && (
-              <AccordionItem value="content-analysis">
-                <AccordionTrigger>
-                  <div className="flex items-center space-x-2">
-                    <span>Content Analyse</span>
-                    <span className={cn(
-                      "px-2 py-1 rounded text-xs font-medium",
-                      getStatusBgColor(result.contentAnalysis.status),
-                      getStatusColor(result.contentAnalysis.status)
-                    )}>
-                      {result.contentAnalysis.score}/{result.contentAnalysis.maxScore}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  {renderContentAnalysis(result.contentAnalysis)}
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {result.technicalSeo && renderTechnicalSeo(result.technicalSeo)}
-          </Accordion>
-        </CardContent>
-      </Card>
+      <DetailedAnalysis 
+        sections={[
+          {
+            id: "crawl-access",
+            title: "Crawl-toegang",
+            description: "Kan Google en andere zoekmachines mijn website goed vinden en lezen?",
+            codeSnippets: result.crawlAccess?.fixes.map(fix => ({
+              id: fix.description,
+              language: "text",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.crawlAccess?.score || 0,
+            predictedScore: result.crawlAccess?.maxScore || 0
+          },
+          {
+            id: "structured-data",
+            title: "Structured Data",
+            description: "Begrijpen zoekmachines waar mijn pagina over gaat?",
+            codeSnippets: result.structuredData?.fixes.map(fix => ({
+              id: fix.description,
+              language: "json",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.structuredData?.score || 0,
+            predictedScore: result.structuredData?.maxScore || 0
+          },
+          {
+            id: "content-analysis",
+            title: "Content Analyse",
+            description: "Is mijn content duidelijk en goed geoptimaliseerd?",
+            codeSnippets: result.contentAnalysis?.fixes.map(fix => ({
+              id: fix.description,
+              language: "html",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.contentAnalysis?.score || 0,
+            predictedScore: result.contentAnalysis?.maxScore || 0
+          },
+          {
+            id: "technical-seo",
+            title: "Technical SEO",
+            description: "Is mijn website technisch geoptimaliseerd voor zoekmachines?",
+            codeSnippets: result.technicalSeo?.fixes.map(fix => ({
+              id: fix.description,
+              language: "html",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.technicalSeo?.score || 0,
+            predictedScore: result.technicalSeo?.maxScore || 0
+          },
+          {
+            id: "answer-ready",
+            title: "Answer-ready content",
+            description: "Geeft mijn pagina direct antwoord op vragen van bezoekers?",
+            codeSnippets: result.answerReady?.fixes.map(fix => ({
+              id: fix.description,
+              language: "html",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.answerReady?.score || 0,
+            predictedScore: result.answerReady?.maxScore || 0
+          },
+          {
+            id: "authority",
+            title: "Autoriteit & citaties",
+            description: "Komt mijn website betrouwbaar en deskundig over?",
+            codeSnippets: result.authority?.fixes.map(fix => ({
+              id: fix.description,
+              language: "html",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.authority?.score || 0,
+            predictedScore: result.authority?.maxScore || 0
+          },
+          {
+            id: "freshness",
+            title: "Versheid",
+            description: "Is de informatie op mijn website actueel?",
+            codeSnippets: result.freshness?.fixes.map(fix => ({
+              id: fix.description,
+              language: "html",
+              code: fix.fix,
+              description: fix.description
+            })) || [],
+            currentScore: result.freshness?.score || 0,
+            predictedScore: result.freshness?.maxScore || 0
+          },
+          {
+            id: "cross-web",
+            title: "Cross-web footprint",
+            description: "Wordt mijn content ook op andere plekken op het internet genoemd?",
+            codeSnippets: [],
+            currentScore: 0,
+            predictedScore: 25
+          }
+        ]}
+      />
 
       <div className="flex justify-end">
         <Button onClick={onNewScan}>Nieuwe Scan</Button>

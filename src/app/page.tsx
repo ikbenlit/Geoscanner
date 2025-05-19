@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { ScanResults } from "@/components/scan-results";
 import { useToast } from "@/components/ui/use-toast";
+import { FeatureBanner } from "@/components/molecules/feature-banner";
 
 // Demo resultaat voor testen
 const demoResult = {
@@ -231,6 +232,9 @@ export default function Home() {
         </CardContent>
       </Card>
 
+      {/* Feature Banner */}
+      <FeatureBanner className="w-full max-w-2xl mt-12" />
+
       {/* Info Sectie */}
       <div className="w-full max-w-2xl mt-12 space-y-8">
         <div className="text-center">
@@ -238,31 +242,86 @@ export default function Home() {
           <p className="text-steel">We analyseren je website op 8 cruciale criteria voor LLM-visibility</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Crawl-toegang</CardTitle>
-              <CardDescription>Controleert robots.txt en sitemap.xml</CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Structured Data</CardTitle>
-              <CardDescription>Valideert JSON-LD en schema.org markup</CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Answer-ready content</CardTitle>
-              <CardDescription>Analyseert content structuur en leesbaarheid</CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Autoriteit & citaties</CardTitle>
-              <CardDescription>Controleert expertise-indicatoren</CardDescription>
-            </CardHeader>
-          </Card>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">🔍</span>
+              <h3 className="font-semibold text-lg text-midnight">Crawl-toegang</h3>
+            </div>
+            <p className="text-steel">
+              Kan Google en andere zoekmachines mijn website goed vinden en lezen? Dit criterium kijkt of je website toegankelijk is voor zoekmachines, zodat je gevonden kunt worden.
+            </p>
+          </div>
+          
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">🔄</span>
+              <h3 className="font-semibold text-lg text-midnight">Structured Data</h3>
+            </div>
+            <p className="text-steel">
+              Begrijpen zoekmachines waar mijn pagina over gaat? Dit controleert of je extra informatie hebt toegevoegd, zodat zoekmachines en AI je pagina beter snappen.
+            </p>
+          </div>
+          
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">❓</span>
+              <h3 className="font-semibold text-lg text-midnight">Answer-ready content</h3>
+            </div>
+            <p className="text-steel">
+              Geeft mijn pagina direct antwoord op vragen van bezoekers? Dit kijkt of je teksten duidelijk en direct antwoord geven, zodat je kans maakt op een prominente plek in zoekresultaten.
+            </p>
+          </div>
+          
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">🏆</span>
+              <h3 className="font-semibold text-lg text-midnight">Autoriteit & citaties</h3>
+            </div>
+            <p className="text-steel">
+              Komt mijn website betrouwbaar en deskundig over? Dit criterium meet of je pagina verwijzingen of citaties bevat, wat je betrouwbaarheid vergroot.
+            </p>
+          </div>
+          
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">🕒</span>
+              <h3 className="font-semibold text-lg text-midnight">Versheid</h3>
+            </div>
+            <p className="text-steel">
+              Is de informatie op mijn website actueel? Dit controleert of je pagina recent is bijgewerkt, zodat bezoekers en zoekmachines weten dat de informatie up-to-date is.
+            </p>
+          </div>
+          
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">🌐</span>
+              <h3 className="font-semibold text-lg text-midnight">Cross-web footprint</h3>
+            </div>
+            <p className="text-steel">
+              Wordt mijn content ook op andere plekken op het internet genoemd? Dit kijkt of je website of content ook op andere relevante websites of platforms te vinden is.
+            </p>
+          </div>
+          
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">👁️</span>
+              <h3 className="font-semibold text-lg text-midnight">Multimodale leesbaarheid</h3>
+            </div>
+            <p className="text-steel">
+              Is mijn website goed te begrijpen voor iedereen, ook voor mensen met een beperking? Dit criterium kijkt of je pagina duidelijk is, met bijvoorbeeld goede afbeeldingen, video's en teksten.
+            </p>
+          </div>
+          
+          <div className="criterion-item p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center mb-2">
+              <span className="text-2xl mr-3">📊</span>
+              <h3 className="font-semibold text-lg text-midnight">Monitoring-haakjes</h3>
+            </div>
+            <p className="text-steel">
+              Kan ik meten hoe goed mijn website presteert? Dit controleert of je tools hebt geïnstalleerd om te zien hoeveel bezoekers je hebt en hoe je pagina's scoren.
+            </p>
+          </div>
         </div>
 
         <Separator className="my-8" />

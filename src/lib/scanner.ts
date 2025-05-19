@@ -5,6 +5,13 @@ import { analyzeCrawlAccess, CrawlAccessResult } from './modules/crawl-access';
 import { analyzeStructuredData, StructuredDataResult } from './modules/structured-data';
 import { analyzeContent, ContentAnalysisResult } from './modules/content-analysis';
 import { analyzeTechnicalSeo, TechnicalSeoResult } from './modules/technical-seo';
+import { analyzeAnswerReady, AnswerReadyResult } from './modules/answer-ready';
+import { analyzeAuthority, AuthorityResult } from './modules/authority';
+import { analyzeFreshness, FreshnessResult } from './modules/freshness';
+import { analyzeCrossWeb, CrossWebResult } from './modules/cross-web';
+import { analyzeMultimodal, MultimodalResult } from './modules/multimodal';
+import { analyzeMonitoring, MonitoringResult } from './modules/monitoring';
+import { analyzeSchemaAdvanced, SchemaAdvancedResult } from './modules/schema-advanced';
 
 export interface ScanOptions {
   fullDomainScan: boolean;
@@ -55,6 +62,13 @@ export interface CrawlResult {
   structuredData: StructuredDataResult | null;
   contentAnalysis: ContentAnalysisResult | null;
   technicalSeo: TechnicalSeoResult | null;
+  answerReady: AnswerReadyResult | null;
+  authority: AuthorityResult | null;
+  freshness: FreshnessResult | null;
+  crossWeb: CrossWebResult | null;
+  multimodal: MultimodalResult | null;
+  monitoring: MonitoringResult | null;
+  schemaAdvanced: SchemaAdvancedResult | null;
 }
 
 export class Scanner {
@@ -276,7 +290,14 @@ export class Scanner {
         crawlAccess: null,
         structuredData: null,
         contentAnalysis: null,
-        technicalSeo: null
+        technicalSeo: null,
+        answerReady: null,
+        authority: null,
+        freshness: null,
+        crossWeb: null,
+        multimodal: null,
+        monitoring: null,
+        schemaAdvanced: null
       };
     }
 
@@ -302,6 +323,27 @@ export class Scanner {
 
       // Analyseer technical SEO
       const technicalSeo = htmlSnapshot ? analyzeTechnicalSeo(htmlSnapshot) : null;
+      
+      // Analyseer answer-ready content
+      const answerReady = htmlSnapshot ? analyzeAnswerReady(htmlSnapshot) : null;
+      
+      // Analyseer autoriteit en citaties
+      const authority = htmlSnapshot ? analyzeAuthority(htmlSnapshot) : null;
+      
+      // Analyseer content versheid
+      const freshness = htmlSnapshot ? analyzeFreshness(htmlSnapshot, sitemapData, url) : null;
+
+      // Analyseer cross-web
+      const crossWeb = htmlSnapshot ? analyzeCrossWeb(htmlSnapshot, url) : null;
+
+      // Analyseer multimodal
+      const multimodal = htmlSnapshot ? analyzeMultimodal(htmlSnapshot) : null;
+
+      // Analyseer monitoring
+      const monitoring = htmlSnapshot ? analyzeMonitoring(htmlSnapshot) : null;
+
+      // Analyseer schema advanced
+      const schemaAdvanced = htmlSnapshot ? analyzeSchemaAdvanced(htmlSnapshot) : null;
 
       return {
         url,
@@ -311,7 +353,14 @@ export class Scanner {
         crawlAccess,
         structuredData,
         contentAnalysis,
-        technicalSeo
+        technicalSeo,
+        answerReady,
+        authority,
+        freshness,
+        crossWeb,
+        multimodal,
+        monitoring,
+        schemaAdvanced
       };
     } catch (error) {
       return {
@@ -322,7 +371,14 @@ export class Scanner {
         crawlAccess: null,
         structuredData: null,
         contentAnalysis: null,
-        technicalSeo: null
+        technicalSeo: null,
+        answerReady: null,
+        authority: null,
+        freshness: null,
+        crossWeb: null,
+        multimodal: null,
+        monitoring: null,
+        schemaAdvanced: null
       };
     }
   }
