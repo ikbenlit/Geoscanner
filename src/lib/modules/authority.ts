@@ -264,7 +264,7 @@ function analyzeOutboundLinks(html: string): AuthorityResult['details']['outboun
           authorityDomains.add(domain);
         }
       }
-    } catch (e) {
+    } catch (_e) {
       // Ongeldige URL, negeren
     }
   }

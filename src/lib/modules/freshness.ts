@@ -301,7 +301,7 @@ function analyzeContentFreshness(
 
       result.ageInDays = diffDays;
       result.isRecent = diffDays <= 180; // Minder dan 6 maanden
-    } catch (e) {
+    } catch (_e) {
       // Ongeldige datum, niets doen
     }
   }
@@ -335,7 +335,7 @@ function analyzeContentFreshness(
           }
         }
       }
-    } catch (e) {
+    } catch (_e) {
       // Ongeldige datum, niets doen
     }
   }

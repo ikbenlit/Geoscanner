@@ -13,7 +13,7 @@ type ToasterToast = ToastProps & {
   action?: ToastActionElement;
 };
 
-const actionTypes = {
+const _actionTypes = {
   ADD_TOAST: 'ADD_TOAST',
   UPDATE_TOAST: 'UPDATE_TOAST',
   DISMISS_TOAST: 'DISMISS_TOAST',
@@ -28,7 +28,7 @@ function genId() {
 }
 
 // Prefix ActionType with _ to indicate it's used as a type definition helper
-type _ActionType = typeof actionTypes;
+type _ActionType = typeof _actionTypes;
 
 type Action =
   | {

@@ -222,8 +222,8 @@ function analyzeExternalMentions(
       .catch(err => {
         console.error('Fout bij ophalen externe vermeldingen:', err);
       });
-  } catch (error) {
-    console.error('Fout bij analyseExternalMentions:', error);
+  } catch (_error) {
+    console.error('Fout bij analyseExternalMentions:', _error);
   }
 
   return result;
@@ -254,8 +254,8 @@ function simulateBacklinksAnalysis(hostname: string): CrossWebResult['details'][
       .catch(err => {
         console.error('Fout bij ophalen backlinks:', err);
       });
-  } catch (error) {
-    console.error('Fout bij analyseBacklinks:', error);
+  } catch (_error) {
+    console.error('Fout bij analyseBacklinks:', _error);
   }
 
   return result;

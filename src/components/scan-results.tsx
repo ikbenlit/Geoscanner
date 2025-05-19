@@ -1,19 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { RobotsTxtRules, SitemapData, HtmlSnapshot } from '@/lib/scanner';
 import { CrawlAccessResult } from '@/lib/modules/crawl-access';
 import { StructuredDataResult } from '@/lib/modules/structured-data';
 import { ContentAnalysisResult } from '@/lib/modules/content-analysis';
-import { Badge } from '@/components/ui/badge';
 import { TechnicalSeoResult } from '@/lib/modules/technical-seo';
 import { ScoreHero } from '@/components/results/ScoreHero/ScoreHero';
 import { QuickWinsPanel } from '@/components/results/QuickWinsPanel/QuickWinsPanel';
@@ -29,7 +20,7 @@ import { SchemaAdvancedResult } from '@/lib/modules/schema-advanced';
 
 type Status = 'success' | 'warning' | 'danger';
 
-function getStatusVariant(status: Status): 'default' | 'destructive' | 'secondary' {
+function _getStatusVariant(status: Status): 'default' | 'destructive' | 'secondary' {
   switch (status) {
     case 'success':
       return 'default';

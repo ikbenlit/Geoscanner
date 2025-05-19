@@ -265,7 +265,7 @@ function extractSchemaObjects(html: string): any[] {
       } else {
         schemaObjects.push(jsonData);
       }
-    } catch (e) {
+    } catch (_e) {
       // JSON parsing error, add as a syntax error later
     }
   }
