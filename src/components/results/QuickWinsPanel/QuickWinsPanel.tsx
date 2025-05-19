@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Copy, Check } from 'lucide-react';
 import { QuickWin } from '@/lib/types/results';
 import { useClipboard } from '@/lib/utils/clipboard';
-import { getStatusColor } from '@/lib/utils/scores';
+import { getStatusColor, getImpactColor } from '@/lib/utils/scores';
 
 interface QuickWinsPanelProps {
   quickWins: QuickWin[];
@@ -37,7 +37,7 @@ export const QuickWinsPanel = ({ quickWins }: QuickWinsPanelProps) => {
                 <h3 className="text-lg font-medium text-gray-900">{quickWin.title}</h3>
                 <p className="text-sm text-gray-600 mt-1">{quickWin.description}</p>
                 <div className="mt-2 flex items-center space-x-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(quickWin.impact)}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(quickWin.impact)}`}>
                     {quickWin.impact}
                   </span>
                   <span className="text-sm text-gray-500">
