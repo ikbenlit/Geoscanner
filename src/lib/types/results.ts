@@ -39,10 +39,11 @@ export interface CodeSnippet {
 export interface AnalysisSection {
   id: string;
   title: string;
-  description: string;
-  codeSnippets: CodeSnippet[];
-  currentScore: number;
-  predictedScore: number;
+  description?: string;
+  codeSnippets?: CodeSnippet[];
+  currentScore?: number;
+  predictedScore?: number;
+  isTitle?: boolean;
 }
 
 export interface ModuleProgress {

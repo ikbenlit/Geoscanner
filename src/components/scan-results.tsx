@@ -205,6 +205,76 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
 
       <DetailedAnalysis
         sections={[
+          // AI-Optimalisatie Secties
+          {
+            // @ts-ignore - Dit is een tijdelijke oplossing om een titel-element toe te voegen
+            id: 'ai-optimization-title',
+            title: 'AI-Optimalisatie',
+            isTitle: true, // Markeer dit als een titel-element
+          },
+          {
+            id: 'answer-ready',
+            title: 'Answer-ready content',
+            description: 'Geeft mijn pagina direct antwoord op vragen van bezoekers?',
+            codeSnippets:
+              result.answerReady?.fixes.map(fix => ({
+                id: fix.description,
+                language: 'html', // of 'text' afhankelijk van de 'fix' inhoud
+                code: fix.fix,
+                description: fix.description,
+              })) || [],
+            currentScore: result.answerReady?.score || 0,
+            predictedScore: result.answerReady?.maxScore || 0,
+          },
+          {
+            id: 'multimodal',
+            title: 'Multimodale leesbaarheid',
+            description: 'Is mijn website geoptimaliseerd voor verschillende typen media (tekst, afbeeldingen)?',
+            codeSnippets:
+              result.multimodal?.fixes.map(fix => ({
+                id: fix.description,
+                language: 'html',
+                code: fix.fix,
+                description: fix.description,
+              })) || [],
+            currentScore: result.multimodal?.score || 0,
+            predictedScore: result.multimodal?.maxScore || 0,
+          },
+          {
+            id: 'schema-advanced',
+            title: 'Schema.org Geavanceerd',
+            description: 'Maakt mijn website gebruik van geavanceerde Schema.org markup voor maximale context?',
+            codeSnippets:
+              result.schemaAdvanced?.fixes.map(fix => ({
+                id: fix.description,
+                language: 'json',
+                code: fix.fix,
+                description: fix.description,
+              })) || [],
+            currentScore: result.schemaAdvanced?.score || 0,
+            predictedScore: result.schemaAdvanced?.maxScore || 0,
+          },
+          {
+            id: 'cross-web',
+            title: 'Cross-web Footprint',
+            description: 'Hoe is mijn website verbonden en vertegenwoordigd op het bredere web?',
+            codeSnippets:
+              result.crossWeb?.fixes.map(fix => ({
+                id: fix.description,
+                language: 'json', // Kan variëren, afhankelijk van de 'fix'
+                code: fix.fix,
+                description: fix.description,
+              })) || [],
+            currentScore: result.crossWeb?.score || 0,
+            predictedScore: result.crossWeb?.maxScore || 0,
+          },
+          // Algemene SEO Secties
+          {
+            // @ts-ignore - Dit is een tijdelijke oplossing om een titel-element toe te voegen
+            id: 'general-seo-title',
+            title: 'Algemene SEO',
+            isTitle: true, // Markeer dit als een titel-element
+          },
           {
             id: 'crawl-access',
             title: 'Crawl-toegang',
@@ -250,11 +320,11 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
           {
             id: 'technical-seo',
             title: 'Technical SEO',
-            description: 'Is mijn website technisch geoptimaliseerd voor zoekmachines?',
+            description: 'Is mijn website technisch correct geconfigureerd voor zoekmachines?',
             codeSnippets:
               result.technicalSeo?.fixes.map(fix => ({
                 id: fix.description,
-                language: 'html',
+                language: 'text', // Kan variëren
                 code: fix.fix,
                 description: fix.description,
               })) || [],
@@ -262,27 +332,13 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
             predictedScore: result.technicalSeo?.maxScore || 0,
           },
           {
-            id: 'answer-ready',
-            title: 'Answer-ready content',
-            description: 'Geeft mijn pagina direct antwoord op vragen van bezoekers?',
-            codeSnippets:
-              result.answerReady?.fixes.map(fix => ({
-                id: fix.description,
-                language: 'html',
-                code: fix.fix,
-                description: fix.description,
-              })) || [],
-            currentScore: result.answerReady?.score || 0,
-            predictedScore: result.answerReady?.maxScore || 0,
-          },
-          {
             id: 'authority',
-            title: 'Autoriteit & citaties',
-            description: 'Komt mijn website betrouwbaar en deskundig over?',
+            title: 'Autoriteit & Citaties',
+            description: 'Wordt mijn website als een autoriteit beschouwd binnen zijn niche?',
             codeSnippets:
               result.authority?.fixes.map(fix => ({
                 id: fix.description,
-                language: 'html',
+                language: 'text', // Kan variëren
                 code: fix.fix,
                 description: fix.description,
               })) || [],
@@ -292,11 +348,11 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
           {
             id: 'freshness',
             title: 'Versheid',
-            description: 'Is de informatie op mijn website actueel?',
+            description: 'Is de content op mijn website recent en actueel?',
             codeSnippets:
               result.freshness?.fixes.map(fix => ({
                 id: fix.description,
-                language: 'html',
+                language: 'html', // Kan variëren
                 code: fix.fix,
                 description: fix.description,
               })) || [],
@@ -304,60 +360,18 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
             predictedScore: result.freshness?.maxScore || 0,
           },
           {
-            id: 'cross-web',
-            title: 'Cross-web footprint',
-            description: 'Wordt mijn content ook op andere plekken op het internet genoemd?',
-            codeSnippets:
-              result.crossWeb?.fixes.map(fix => ({
-                id: fix.description,
-                language: 'html',
-                code: fix.fix,
-                description: fix.description,
-              })) || [],
-            currentScore: result.crossWeb?.score || 0,
-            predictedScore: result.crossWeb?.maxScore || 0,
-          },
-          {
-            id: 'multimodal',
-            title: 'Multimodale leesbaarheid',
-            description: 'Is mijn content toegankelijk voor alle gebruikers en apparaten?',
-            codeSnippets:
-              result.multimodal?.fixes.map(fix => ({
-                id: fix.description,
-                language: 'html',
-                code: fix.fix,
-                description: fix.description,
-              })) || [],
-            currentScore: result.multimodal?.score || 0,
-            predictedScore: result.multimodal?.maxScore || 0,
-          },
-          {
             id: 'monitoring',
             title: 'Monitoring-haakjes',
-            description: 'Kan ik mijn website goed monitoren op fouten en gebruikersgedrag?',
+            description: 'Zijn er systemen aanwezig om de prestaties en gezondheid van de website te monitoren?',
             codeSnippets:
               result.monitoring?.fixes.map(fix => ({
                 id: fix.description,
-                language: 'javascript',
+                language: 'text', // Kan variëren
                 code: fix.fix,
                 description: fix.description,
               })) || [],
             currentScore: result.monitoring?.score || 0,
             predictedScore: result.monitoring?.maxScore || 0,
-          },
-          {
-            id: 'schema-advanced',
-            title: 'Schema.org analyse',
-            description: 'Is mijn schema markup geoptimaliseerd voor maximale vindbaarheid?',
-            codeSnippets:
-              result.schemaAdvanced?.fixes.map(fix => ({
-                id: fix.description,
-                language: 'json',
-                code: fix.fix,
-                description: fix.description,
-              })) || [],
-            currentScore: result.schemaAdvanced?.score || 0,
-            predictedScore: result.schemaAdvanced?.maxScore || 0,
           },
         ]}
       />

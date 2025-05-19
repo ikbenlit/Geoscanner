@@ -23,108 +23,115 @@ export const DetailedAnalysis = ({ sections }: DetailedAnalysisProps) => {
 
   return (
     <div className="space-y-6">
-      {sections.map(section => (
-        <motion.div
-          key={section.id}
-          className="bg-white rounded-lg shadow-md overflow-hidden"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <button
-            className="w-full px-6 py-4 flex justify-between items-center hover:bg-gray-50"
-            onClick={() => toggleSection(section.id)}
+      {sections.map(section => {
+        if (section.isTitle) {
+          return (
+            <h2 key={section.id} className="text-2xl font-semibold text-gray-800 pt-4 pb-2 border-b-2 border-gray-200">
+              {section.title}
+            </h2>
+          );
+        }
+        return (
+          <motion.div
+            key={section.id}
+            className="bg-white rounded-lg shadow-md overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="flex-1 text-left">
-              <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
-              <p className="text-sm text-gray-600 mt-1">{section.description}</p>
-            </div>
-            {expandedSections.includes(section.id) ? (
-              <ChevronUp className="h-5 w-5 text-gray-500" />
-            ) : (
-              <ChevronDown className="h-5 w-5 text-gray-500" />
-            )}
-          </button>
+            <button
+              className="w-full px-6 py-4 flex justify-between items-center hover:bg-gray-50"
+              onClick={() => toggleSection(section.id)}
+            >
+              <div className="flex-1 text-left">
+                <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
+                {section.description && <p className="text-sm text-gray-600 mt-1">{section.description}</p>}
+              </div>
+              {expandedSections.includes(section.id) ? (
+                <ChevronUp className="h-5 w-5 text-gray-500" />
+              ) : (
+                <ChevronDown className="h-5 w-5 text-gray-500" />
+              )}
+            </button>
 
-          <AnimatePresence>
-            {expandedSections.includes(section.id) && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="px-6 pb-4"
-              >
-                <div className="space-y-4">
-                  {section.codeSnippets.map(snippet => (
-                    <div key={snippet.id} className="relative">
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm text-gray-700">{snippet.description}</p>
-                        <button
-                          onClick={() => copyToClipboard(snippet.id, snippet.code)}
-                          className="p-2 text-gray-500 hover:text-gray-700"
+            <AnimatePresence>
+              {expandedSections.includes(section.id) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="px-6 pb-4"
+                >
+                  <div className="space-y-4">
+                    {section.codeSnippets && section.codeSnippets.map(snippet => (
+                      <div key={snippet.id} className="relative">
+                        <div className="flex justify-between items-center mb-2">
+                          <p className="text-sm text-gray-700">{snippet.description}</p>
+                          <button
+                            onClick={() => copyToClipboard(snippet.id, snippet.code)}
+                            className="p-2 text-gray-500 hover:text-gray-700"
+                          >
+                            {isCopied(snippet.id) ? (
+                              <span className="text-green-500">Gekopieerd!</span>
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                        <SyntaxHighlighter
+                          language={snippet.language}
+                          style={vscDarkPlus}
+                          className="rounded-md"
                         >
-                          {isCopied(snippet.id) ? (
-                            <span className="text-green-500">Gekopieerd!</span>
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </button>
+                          {snippet.code}
+                        </SyntaxHighlighter>
                       </div>
-                      <SyntaxHighlighter
-                        language={snippet.language}
-                        style={vscDarkPlus}
-                        className="rounded-md"
-                      >
-                        {snippet.code}
-                      </SyntaxHighlighter>
-                    </div>
-                  ))}
+                    ))}
 
-                  <div className="mt-4 p-4 bg-gray-50 rounded-md">
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Score Voorspelling</h4>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-gray-600">Huidige Score</p>
-                        <p className="text-lg font-semibold text-gray-900">
-                          {section.currentScore}%
-                        </p>
+                    {(typeof section.currentScore === 'number' && typeof section.predictedScore === 'number') && (
+                      <div className="mt-4 p-4 bg-gray-50 rounded-md">
+                        <h4 className="text-sm font-medium text-gray-900 mb-2">Score Voorspelling</h4>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-gray-600">Huidige Score</p>
+                            <p className="text-lg font-semibold text-gray-900">
+                              {section.currentScore}%
+                            </p>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-sm text-gray-600">Voorspelde Verbetering</p>
+                            <p
+                              className={`text-lg font-semibold ${
+                                (section.currentScore !== undefined && section.predictedScore !== undefined && calculateScoreImprovement(section.currentScore, section.predictedScore).isPositive)
+                                  ? 'text-green-600'
+                                  : 'text-red-600'
+                              }`}
+                            >
+                              {(section.currentScore !== undefined && section.predictedScore !== undefined) && (
+                                calculateScoreImprovement(section.currentScore, section.predictedScore).isPositive ? '+' : '-'
+                              )}
+                              {(section.currentScore !== undefined && section.predictedScore !== undefined) && 
+                                calculateScoreImprovement(section.currentScore, section.predictedScore).percentage
+                              }%
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-600">Voorspelde Score</p>
+                            <p className="text-lg font-semibold text-gray-900">
+                              {section.predictedScore}%
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-center">
-                        <p className="text-sm text-gray-600">Voorspelde Verbetering</p>
-                        <p
-                          className={`text-lg font-semibold ${
-                            calculateScoreImprovement(section.currentScore, section.predictedScore)
-                              .isPositive
-                              ? 'text-green-600'
-                              : 'text-red-600'
-                          }`}
-                        >
-                          {calculateScoreImprovement(section.currentScore, section.predictedScore)
-                            .isPositive
-                            ? '+'
-                            : '-'}
-                          {
-                            calculateScoreImprovement(section.currentScore, section.predictedScore)
-                              .percentage
-                          }
-                          %
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Voorspelde Score</p>
-                        <p className="text-lg font-semibold text-gray-900">
-                          {section.predictedScore}%
-                        </p>
-                      </div>
-                    </div>
+                    )}
                   </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        );
+      })}
     </div>
   );
 };
