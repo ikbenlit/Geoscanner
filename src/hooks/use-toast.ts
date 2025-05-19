@@ -29,23 +29,24 @@ function genId() {
   return count.toString();
 }
 
-type ActionType = typeof actionTypes;
+// Prefix ActionType with _ to indicate it's used as a type definition helper
+type _ActionType = typeof actionTypes;
 
 type Action =
   | {
-      type: ActionType['ADD_TOAST'];
+      type: _ActionType['ADD_TOAST'];
       toast: ToasterToast;
     }
   | {
-      type: ActionType['UPDATE_TOAST'];
+      type: _ActionType['UPDATE_TOAST'];
       toast: Partial<ToasterToast>;
     }
   | {
-      type: ActionType['DISMISS_TOAST'];
+      type: _ActionType['DISMISS_TOAST'];
       toastId?: ToasterToast['id'];
     }
   | {
-      type: ActionType['REMOVE_TOAST'];
+      type: _ActionType['REMOVE_TOAST'];
       toastId?: ToasterToast['id'];
     };
 
