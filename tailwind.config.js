@@ -7,6 +7,13 @@ module.exports = {
       './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
+    	container: {
+    		center: true,
+    		padding: "2rem",
+    		screens: {
+    			"2xl": "1400px",
+    		},
+    	},
     	extend: {
     		borderRadius: {
     			lg: 'var(--radius)',
@@ -53,7 +60,10 @@ module.exports = {
     				'3': 'hsl(var(--chart-3))',
     				'4': 'hsl(var(--chart-4))',
     				'5': 'hsl(var(--chart-5))'
-    			}
+    			},
+    			'success-green': '#14B870',
+    			'warning-amber': '#FF9F0A',
+    			'danger-red': '#FF3B5C',
     		},
     		keyframes: {
     			'accordion-down': {

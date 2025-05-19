@@ -13,6 +13,9 @@ import { CrawlResult } from '@/lib/scanner';
 import { ContentAnalysisResult } from '@/lib/modules/content-analysis';
 import { Badge } from "@/components/ui/badge";
 import { TechnicalSeoResult } from '@/lib/modules/technical-seo';
+import { ScoreCircle } from "@/components/atoms/score-circle";
+import { ModuleCard } from "@/components/molecules/module-card";
+import { ModuleRadarChart } from "@/components/molecules/radar-chart";
 
 type Status = 'success' | 'warning' | 'danger';
 
@@ -676,6 +679,30 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
           <CardDescription>Analyse van {result.url}</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Score Circle */}
+          <div className="flex justify-center mb-8">
+            <ScoreCircle 
+              score={result.overallScore} 
+              maxScore={100} 
+              size="lg" 
+            />
+          </div>
+
+          {/* Radar Chart */}
+          <div className="mb-8">
+            <ModuleRadarChart modules={result.modules} />
+          </div>
+
+          {/* Module Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {result.modules.map(module => (
+              <ModuleCard key={module.id} module={module} />
+            ))}
+          </div>
+
+          <Separator className="my-6" />
+
+          {/* Bestaande Accordion voor Details */}
           <Accordion type="single" collapsible className="w-full">
             {result.crawlAccess && (
               <AccordionItem value="crawl-access">
