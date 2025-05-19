@@ -116,20 +116,42 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
     return <div className="text-center py-12">Resultaten worden geladen...</div>;
   }
 
+  const aiModuleIds = ['answer-ready', 'multimodal', 'schema-advanced', 'cross-web'];
+
+  const categorizedQuickWins = result.quickWins
+    .map(win => {
+      const category = aiModuleIds.includes(win.module)
+        ? 'AI-Optimalisatie'
+        : 'Generieke SEO';
+      return {
+        id: win.module + '_' + win.description.slice(0,20), // Maak id unieker
+        title: win.description,
+        description: win.fix,
+        impact: win.impact,
+        estimatedTime: '5 min', // Behoud huidige logica of maak dynamisch indien nodig
+        code: win.fix,
+        moduleId: win.module,
+        category: category as 'AI-Optimalisatie' | 'Generieke SEO', // Expliciete type cast
+      };
+    })
+    .sort((a, b) => {
+      // Sorteer AI-Optimalisatie eerst
+      if (a.category === 'AI-Optimalisatie' && b.category !== 'AI-Optimalisatie') {
+        return -1;
+      }
+      if (a.category !== 'AI-Optimalisatie' && b.category === 'AI-Optimalisatie') {
+        return 1;
+      }
+      // Behoud huidige volgorde voor items binnen dezelfde categorie (of pas aan indien nodig)
+      return 0;
+    });
+
   return (
     <div className="space-y-8">
       <ScoreHero score={result.overallScore} maxScore={100} url={result.url} />
 
       <QuickWinsPanel
-        quickWins={result.quickWins.map(win => ({
-          id: win.module,
-          title: win.description,
-          description: win.fix,
-          impact: win.impact,
-          estimatedTime: '5 min',
-          code: win.fix,
-          moduleId: win.module,
-        }))}
+        quickWins={categorizedQuickWins}
       />
 
       <ModuleOverview

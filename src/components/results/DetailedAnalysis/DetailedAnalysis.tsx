@@ -25,8 +25,14 @@ export const DetailedAnalysis = ({ sections }: DetailedAnalysisProps) => {
     <div className="space-y-6">
       {sections.map(section => {
         if (section.isTitle) {
+          let titleClassName = "text-2xl font-semibold pt-4 pb-2 mb-2 border-b-2 border-gray-200";
+          if (section.title === 'AI-Optimalisatie') {
+            titleClassName += " text-purple-700 border-purple-200";
+          } else if (section.title === 'Algemene SEO') {
+            titleClassName += " text-blue-700 border-blue-200";
+          }
           return (
-            <h2 key={section.id} className="text-2xl font-semibold text-gray-800 pt-4 pb-2 border-b-2 border-gray-200">
+            <h2 key={section.id} className={titleClassName}>
               {section.title}
             </h2>
           );

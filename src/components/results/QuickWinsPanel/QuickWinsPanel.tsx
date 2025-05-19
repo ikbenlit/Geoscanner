@@ -44,6 +44,17 @@ export const QuickWinsPanel = ({ quickWins }: QuickWinsPanelProps) => {
                   <span className="text-sm text-gray-500">
                     Geschatte tijd: {quickWin.estimatedTime}
                   </span>
+                  {quickWin.category && (
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ml-2 ${
+                        quickWin.category === 'AI-Optimalisatie'
+                          ? 'bg-purple-100 text-purple-700'
+                          : 'bg-blue-100 text-blue-700'
+                      }`}
+                    >
+                      {quickWin.category}
+                    </span>
+                  )}
                 </div>
               </div>
               <button

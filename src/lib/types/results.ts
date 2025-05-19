@@ -18,6 +18,7 @@ export interface QuickWin extends BaseAction {
   impact: Impact;
   estimatedTime: string;
   code: string;
+  category?: 'AI-Optimalisatie' | 'Generieke SEO';
 }
 
 export interface Module {

@@ -289,10 +289,21 @@ export async function POST(request: Request) {
     // Genereer quick wins
     const quickWins = [];
 
+    if (result.crawlAccess?.fixes) {
+      quickWins.push(
+        ...result.crawlAccess.fixes.map(fix => ({
+          module: 'crawl-access',
+          impact: fix.impact,
+          description: fix.description,
+          fix: fix.fix,
+        }))
+      );
+    }
+
     if (result.structuredData?.fixes) {
       quickWins.push(
         ...result.structuredData.fixes.map(fix => ({
-          module: 'Structured Data',
+          module: 'structured-data',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -303,7 +314,7 @@ export async function POST(request: Request) {
     if (result.contentAnalysis?.fixes) {
       quickWins.push(
         ...result.contentAnalysis.fixes.map(fix => ({
-          module: 'Content Analyse',
+          module: 'content-analysis',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -314,7 +325,7 @@ export async function POST(request: Request) {
     if (result.technicalSeo?.fixes) {
       quickWins.push(
         ...result.technicalSeo.fixes.map(fix => ({
-          module: 'Technical SEO',
+          module: 'technical-seo',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -326,7 +337,7 @@ export async function POST(request: Request) {
     if (result.answerReady?.fixes) {
       quickWins.push(
         ...result.answerReady.fixes.map(fix => ({
-          module: 'Answer-ready Content',
+          module: 'answer-ready',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -337,7 +348,7 @@ export async function POST(request: Request) {
     if (result.authority?.fixes) {
       quickWins.push(
         ...result.authority.fixes.map(fix => ({
-          module: 'Autoriteit & Citaties',
+          module: 'authority',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -348,7 +359,7 @@ export async function POST(request: Request) {
     if (result.freshness?.fixes) {
       quickWins.push(
         ...result.freshness.fixes.map(fix => ({
-          module: 'Versheid Analyse',
+          module: 'freshness',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -359,7 +370,7 @@ export async function POST(request: Request) {
     if (result.crossWeb?.fixes) {
       quickWins.push(
         ...result.crossWeb.fixes.map(fix => ({
-          module: 'Cross-web Footprint',
+          module: 'cross-web',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -370,7 +381,7 @@ export async function POST(request: Request) {
     if (result.multimodal?.fixes) {
       quickWins.push(
         ...result.multimodal.fixes.map(fix => ({
-          module: 'Multimodale Toegankelijkheid',
+          module: 'multimodal',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -381,7 +392,7 @@ export async function POST(request: Request) {
     if (result.monitoring?.fixes) {
       quickWins.push(
         ...result.monitoring.fixes.map(fix => ({
-          module: 'Monitoring & Analytics',
+          module: 'monitoring',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,
@@ -392,7 +403,7 @@ export async function POST(request: Request) {
     if (result.schemaAdvanced?.fixes) {
       quickWins.push(
         ...result.schemaAdvanced.fixes.map(fix => ({
-          module: 'Diepgaande Schema.org Analyse',
+          module: 'schema-advanced',
           impact: fix.impact,
           description: fix.description,
           fix: fix.fix,

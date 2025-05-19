@@ -62,3 +62,4 @@ interface ModuleResult {
 - Gebruik connection pooling
 - Monitor performance metrics
 
+When running command prompts use Windows PowerShell syntax 
