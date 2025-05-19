@@ -7,7 +7,7 @@ import { Toggle } from '@/components/ui/toggle';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ScanResults } from '@/components/scan-results';
 import { useToast } from '@/components/ui/use-toast';
 import { FeatureBanner } from '@/components/molecules/feature-banner';
@@ -28,6 +28,24 @@ export default function Home() {
   const [fullDomainScan, setFullDomainScan] = useState(false);
   const [scanResult, setScanResult] = useState<any>(null);
   const { toast } = useToast();
+  
+  // Debug informatie
+  useEffect(() => {
+    console.log('📱 Home page component geladen');
+    
+    // Test of UI elementen worden gerenderd
+    setTimeout(() => {
+      const uiElements = {
+        card: document.querySelector('.card'),
+        form: document.querySelector('form'),
+        button: document.querySelector('button[type="submit"]'),
+        input: document.querySelector('input[type="url"]')
+      };
+      console.log('📱 UI elementen gevonden:', 
+        Object.keys(uiElements).map(key => `${key}: ${!!uiElements[key as keyof typeof uiElements]}`).join(', ')
+      );
+    }, 1000);
+  }, []);
 
   const isValidUrl = (url: string) => {
     try {
@@ -40,18 +58,22 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🚀 Form submission met URL:', url);
+    
     if (!isValidUrl(url)) {
       toast({
         title: 'Ongeldige URL',
         description: 'Voer een geldige URL in (inclusief http(s)://)',
         variant: 'destructive',
       });
+      console.log('❌ Ongeldige URL gedetecteerd');
       return;
     }
     setIsScanning(true);
     setProgress(0);
 
     try {
+      console.log('🔄 API call starten naar /api/scan');
       const response = await fetch('/api/scan', {
         method: 'POST',
         headers: {
@@ -62,18 +84,22 @@ export default function Home() {
 
       if (!response.ok) {
         const error = await response.json();
+        console.log('❌ API error:', error);
         throw new Error(error.error || 'Er is een fout opgetreden');
       }
 
       const result = await response.json();
+      console.log('✅ API resultaat ontvangen:', result);
 
       if (result.error) {
+        console.log('❌ Error in resultaat:', result.error);
         throw new Error(result.error);
       }
 
       setScanResult(result);
       setShowResults(true);
     } catch (error) {
+      console.log('❌ Exception opgetreden:', error);
       toast({
         title: 'Fout',
         description: error instanceof Error ? error.message : 'Er is een fout opgetreden',
@@ -100,6 +126,9 @@ export default function Home() {
       </div>
     );
   }
+
+  // Voeg extra debug render toe
+  console.log('🎨 Rendering homepage UI');
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
