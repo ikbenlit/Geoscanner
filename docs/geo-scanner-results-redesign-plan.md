@@ -6,6 +6,7 @@
 **Naar**: Action-driven dashboard voor niet-technische gebruikers
 
 **Success Criteria:**
+
 - 90% van gebruikers begrijpt direct wat ze moeten doen
 - Quick wins zijn zichtbaar binnen 5 seconden
 - Technische details zijn beschikbaar maar niet overweldigend
@@ -15,6 +16,7 @@
 ### Fase 0: Analyse & Planning (Week 0) [✅ AFGEROND]
 
 #### 0.1 Dependency Analyse [✅ AFGEROND]
+
 ```json
 {
   "huidigeDependencies": {
@@ -49,11 +51,13 @@
 ```
 
 #### 0.2 Resource Planning [✅ AFGEROND]
+
 - [✅] Team samenstelling bepalen
 - [✅] Tijdsinvestering per component schatten
 - [✅] Planning goedgekeurd door stakeholders
 
 #### 0.3 Technische Schuld Plan [✅ AFGEROND]
+
 - [✅] Oude componenten markeren als deprecated
 - [✅] Data migratie strategie opstellen
 - [✅] Backward compatibility plan maken
@@ -61,6 +65,7 @@
 ### Fase 1: Voorbereiding (Week 1) [🔄 LOPEND]
 
 #### 1.1 Project Setup [✅ AFGEROND]
+
 ```bash
 # Nieuwe directory structuur
 mkdir -p src/components/results/{ScoreHero,QuickWinsPanel,ModuleOverview,DetailedAnalysis}
@@ -73,34 +78,38 @@ npm install prism-react-renderer        # ✅ AFGEROND
 ```
 
 #### 1.2 Feature Flag Implementatie [✅ AFGEROND]
+
 ```typescript
 // src/lib/features.ts
 export const FEATURES = {
-  NEW_RESULTS_UI: process.env.NEXT_PUBLIC_ENABLE_NEW_RESULTS_UI === 'true'
-}
+  NEW_RESULTS_UI: process.env.NEXT_PUBLIC_ENABLE_NEW_RESULTS_UI === 'true',
+};
 
 // src/lib/results/feature-detection.ts
 export const isNewUIEnabled = () => {
-  return FEATURES.NEW_RESULTS_UI && 
-         typeof window !== 'undefined' && 
-         window.localStorage.getItem('prefer-new-ui') === 'true';
-}
+  return (
+    FEATURES.NEW_RESULTS_UI &&
+    typeof window !== 'undefined' &&
+    window.localStorage.getItem('prefer-new-ui') === 'true'
+  );
+};
 ```
 
 #### 1.3 Basis Styling [✅ AFGEROND]
+
 ```css
 // src/styles/results.css
 :root {
   /* Score-based colors */
-  --score-excellent: #14B870;  /* 80-100 */
-  --score-good: #22C55E;       /* 60-79 */
-  --score-warning: #FF9F0A;    /* 40-59 */
-  --score-critical: #FF3B5C;   /* 0-39 */
-  
+  --score-excellent: #14b870; /* 80-100 */
+  --score-good: #22c55e; /* 60-79 */
+  --score-warning: #ff9f0a; /* 40-59 */
+  --score-critical: #ff3b5c; /* 0-39 */
+
   /* Priority-based colors */
-  --priority-high: linear-gradient(135deg, #FF3B5C 0%, #FF5C5C 100%);
-  --priority-medium: linear-gradient(135deg, #FF9F0A 0%, #FFBF4A 100%);
-  --priority-low: linear-gradient(135deg, #0ACDDA 0%, #4ADDEA 100%);
+  --priority-high: linear-gradient(135deg, #ff3b5c 0%, #ff5c5c 100%);
+  --priority-medium: linear-gradient(135deg, #ff9f0a 0%, #ffbf4a 100%);
+  --priority-low: linear-gradient(135deg, #0acdda 0%, #4addea 100%);
 }
 
 /* Performance optimalisaties */
@@ -114,18 +123,21 @@ export const isNewUIEnabled = () => {
 ### Fase 2: Core Componenten (Week 2) [🔄 LOPEN]
 
 #### 2.1 ScoreHero Component [✅ AFGEROND]
+
 - [✅] Migreer bestaande `ScoreCircle` naar nieuwe structuur
 - [✅] Implementeer animaties met Framer Motion
 - [✅] Voeg status indicators toe
 - [✅] Implementeer responsive design
 
 #### 2.2 QuickWinsPanel Component [✅ AFGEROND]
+
 - [✅] Migreer bestaande `QuickWinCard` naar nieuwe structuur
 - [✅] Implementeer priority-based styling
 - [✅] Voeg impact indicators toe
 - [✅] Implementeer copy-to-clipboard functionaliteit
 
 #### 2.3 ModuleOverview Component [✅ AFGEROND]
+
 - [✅] Migreer bestaande `ModuleCard` en `ModuleRadarChart`
 - [✅] Implementeer nieuwe layout opties
 - [✅] Voeg status indicators toe
@@ -134,6 +146,7 @@ export const isNewUIEnabled = () => {
 ### Fase 3: Functionaliteit (Week 3) [⏳ OPEN]
 
 #### 3.1 State Management [✅ AFGEROND]
+
 ```typescript
 // src/lib/results/state.ts
 interface ResultsState {
@@ -146,12 +159,14 @@ interface ResultsState {
 ```
 
 #### 3.2 Progress Tracking [✅ AFGEROND]
+
 - [✅] Implementeer action tracking
 - [✅] Voeg completion indicators toe
 - [✅] Implementeer persistence
 - [✅] Voeg export functionaliteit toe
 
 #### 3.3 Detailed Analysis [✅ AFGEROND]
+
 - [✅] Implementeer collapsible sections
 - [✅] Voeg code snippets toe
 - [✅] Implementeer copy-to-clipboard
@@ -160,23 +175,28 @@ interface ResultsState {
 ## 📊 Status Tracking
 
 ### Fase Status
+
 - Fase 0: Analyse & Planning [✅ AFGEROND]
 - Fase 1: Voorbereiding [✅ AFGEROND]
 - Fase 2: Core Componenten [✅ AFGEROND]
 - Fase 3: Functionaliteit [✅ AFGEROND]
 
 ### Status Legenda
+
 - ⏳ OPEN: Nog niet gestart
 - 🔄 LOPEN: In uitvoering
 - ✅ AFGEROND: Voltooid
 
 ### Weekelijkse Voortgang
+
 #### Week 0
+
 - [✅] Dependency analyse
 - [✅] Resource planning
 - [✅] Technische schuld plan
 
 #### Week 1
+
 - [✅] Project setup
   - [✅] Dependencies geïnstalleerd
   - [✅] Directory structuur aangemaakt
@@ -189,6 +209,7 @@ interface ResultsState {
   - [✅] Responsive design geïmplementeerd
 
 #### Week 2
+
 - [✅] ScoreHero
   - [✅] Component geïmplementeerd
   - [✅] Tests toegevoegd
@@ -205,6 +226,7 @@ interface ResultsState {
   - [✅] Tests toegevoegd
 
 #### Week 3
+
 - [✅] State management
   - [✅] Zustand store geïmplementeerd
   - [✅] Persistence toegevoegd
@@ -222,6 +244,7 @@ interface ResultsState {
   - [✅] Tests toegevoegd
 
 ## 📝 Notities & Updates
+
 - 2024-03-XX: Fase 0 gestart
 - 2024-03-XX: Dependency analyse afgerond
 - 2024-03-XX: Resource planning in uitvoering
@@ -240,16 +263,17 @@ interface ResultsState {
 - 2024-03-XX: Project volledig afgerond! Alle fasen zijn succesvol geïmplementeerd.
 
 ## Code Review & Refactoring
+
 - [✅] Interface duplicatie opgelost
 - [✅] Type inconsistenties opgelost
 - [✅] Code duplicatie opgelost
 - [✅] Gedeelde utilities geïmplementeerd
 
 ## Notities & Updates
+
 2024-03-XX: Code review uitgevoerd en refactoring toegepast
+
 - Gedeelde types geïmplementeerd in `src/lib/types/results.ts`
 - Clipboard functionaliteit gecentraliseerd in `src/lib/utils/clipboard.ts`
 - Score berekeningen gecentraliseerd in `src/lib/utils/scores.ts`
 - Componenten geüpdatet om gedeelde utilities te gebruiken
-
-

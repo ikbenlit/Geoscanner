@@ -13,12 +13,14 @@
 ## 🎯 Business Case
 
 ### Probleem
+
 - Huidige interface is te technisch voor grootste doelgroep
 - Gebruikers begrijpen niet wat ze moeten doen met de resultaten
 - Lage conversie van scan → actie
 - Moeilijk te delen met stakeholders
 
 ### Oplossing Impact
+
 - **+40% user comprehension** door visuele score indicators
 - **+60% action completion** door geprioriteerde quick wins
 - **+25% sharing rate** door rapport-vriendelijke layout
@@ -31,19 +33,24 @@
 ### MVP Fase 1: Core Functionaliteit (✅ Voltooid)
 
 #### 1. Score Visualisation Dashboard
+
 **Huidige staat:** ✅ Geïmplementeerd
+
 - Score Circle component met dynamische kleurcodering
 - Module Cards met status indicators
 - Radar Chart voor module scores
 - Responsive grid layout
 
 **Components geïmplementeerd:**
+
 - **Score Circle Component**
+
   - SVG circle met kleurcodering (0-39: rood, 40-79: oranje, 80-100: groen)
   - Dynamische score weergave
   - Responsive sizing (sm, md, lg)
 
 - **Module Card Component**
+
   - Status indicators met kleurcodering
   - Score weergave
   - Hover states
@@ -57,10 +64,12 @@
 ### MVP Fase 2: Uitgebreide Functionaliteit (🔄 In Progress)
 
 #### 2. Quick Wins Action System
+
 **Huidige staat:** ✅ Geïmplementeerd
 **Nieuwe staat:** Impact-prioritized action cards
 
 **Components geïmplementeerd:**
+
 - **QuickWinCard Component**
   - Kleurcodering per impact level (hoog/medium/laag)
   - Code snippets met syntax highlighting
@@ -68,20 +77,24 @@
   - Eenvoudige en duidelijke layout
 
 **Functional Features:**
+
 - ✅ Code blocks met syntax highlighting
 - ✅ Visuele impact indicators
 - ✅ Duidelijke module identificatie
 
 **UX Improvements:**
+
 - Duidelijke impact indicators met kleurcodering
 - Eenvoudige en overzichtelijke weergave
 - Responsive layout voor alle schermformaten
 
 #### 3. Module Status Cards
+
 **Huidige staat:** ✅ Geïmplementeerd
 **Nieuwe staat:** Visuele status dashboard met icons
 
 **Components geïmplementeerd:**
+
 - **Module Card Component (Uitgebreid)**
   - Iconen per module type
   - Kleurcodering voor scores
@@ -89,6 +102,7 @@
   - Status samenvatting
 
 **Icon System:**
+
 - Crawl Access: 🤖
 - Structured Data: 📊
 - Content Analysis: 📝
@@ -97,6 +111,7 @@
 ### MVP Fase 3: Optimalisatie & Polijst (📅 Gepland)
 
 #### 4. Performance & Toegankelijkheid
+
 - Performance optimalisaties
   - Code splitting
   - Lazy loading
@@ -119,6 +134,7 @@
 ### MVP Fase 1: Core Components (✅ Voltooid)
 
 #### Geïmplementeerde Componenten
+
 ```typescript
 // src/components/atoms/score-circle.tsx
 interface ScoreCircleProps {
@@ -148,6 +164,7 @@ interface ModuleScore {
 ### Implementatie Status
 
 #### ✅ Voltooid
+
 - Score Circle component
 - Module Card component
 - Radar Chart component
@@ -156,12 +173,14 @@ interface ModuleScore {
 - Dark mode support
 
 #### 🔄 In Ontwikkeling
+
 - Quick Win Card component
 - Code snippet weergave
 - Kopieer functionaliteit
 - Impact indicators
 
 #### 📅 Gepland
+
 - Performance optimalisaties
 - Toegankelijkheid implementatie
 - Error boundaries
@@ -170,17 +189,20 @@ interface ModuleScore {
 ### Bestaande Code Aanpassingen
 
 #### 1. ScanResults Component
+
 - ✅ Nieuwe componenten geïntegreerd
 - ✅ Status indicators vereenvoudigd
 - ✅ Visuele hiërarchie verbeterd
 - 🔄 Accordion structuur geoptimaliseerd
 
 #### 2. API Routes
+
 - ✅ Data structuren behouden
 - ✅ Endpoints ongewijzigd
 - ✅ Type definities bijgewerkt
 
 #### 3. State Management
+
 - ✅ React hooks geïmplementeerd
 - 🔄 Context waar nodig
 - 📅 Error boundaries
@@ -188,11 +210,13 @@ interface ModuleScore {
 ### Voordelen van deze Aanpak
 
 1. **Minimale Impact**
+
    - Bestaande data structuren intact
    - API routes ongewijzigd
    - Incrementele verbeteringen
 
 2. **Snelle Implementatie**
+
    - Parallelle component ontwikkeling
    - Bestaande functionaliteit behouden
    - Eenvoudige integratie
@@ -209,16 +233,19 @@ interface ModuleScore {
 ### Implementatie Status
 
 **Desktop (>1024px)**
+
 - ✅ Twee-koloms layout
 - ✅ Module grid
 - ✅ Uitgeklapte code blocks
 
 **Tablet (768-1024px)**
+
 - ✅ Gestapelde layout
 - ✅ Vereenvoudigde visualisaties
 - ✅ Responsive aanpassingen
 
 **Mobile (<768px)**
+
 - ✅ Volledige kolom stack
 - ✅ Vereenvoudigde weergave
 - 🔄 Touch interacties
@@ -232,15 +259,15 @@ interface ModuleScore {
 ```css
 :root {
   /* Impact-based colors */
-  --impact-high: #FF3B5C;
-  --impact-medium: #FF9F0A;
-  --impact-low: #0ACDDA;
+  --impact-high: #ff3b5c;
+  --impact-medium: #ff9f0a;
+  --impact-low: #0acdda;
 
   /* Score-based colors */
-  --score-excellent: #14B870;
-  --score-good: #22C55E;
-  --score-fair: #FF9F0A;
-  --score-poor: #FF3B5C;
+  --score-excellent: #14b870;
+  --score-good: #22c55e;
+  --score-fair: #ff9f0a;
+  --score-poor: #ff3b5c;
 }
 ```
 
@@ -249,18 +276,21 @@ interface ModuleScore {
 ## 🛠 Implementation Roadmap
 
 ### MVP Fase 1: Core Functionaliteit (✅ Voltooid)
+
 - [x] Score Circle component
 - [x] Module Cards
 - [x] Basis layout
 - [x] Kleurensysteem
 
 ### MVP Fase 2: Uitgebreide Functionaliteit (🔄 In Progress)
+
 - [ ] Quick Wins implementatie
 - [ ] Verbeterde visualisaties
 - [ ] Responsive layout
 - [ ] Basis interactiviteit
 
 ### MVP Fase 3: Optimalisatie (📅 Gepland)
+
 - [ ] Performance verbeteringen
 - [ ] Toegankelijkheid
 - [ ] Error handling
@@ -271,12 +301,14 @@ interface ModuleScore {
 ## 📊 Success Criteria
 
 ### MVP Functional Requirements
+
 - [x] Core componenten renderen correct
 - [x] Basis interactiviteit werkt
 - [x] Responsive layout functioneert
 - [ ] Error states zijn afgehandeld
 
 ### MVP Performance Benchmarks
+
 - [ ] Page load time <2 seconden
 - [ ] Basis interacties <100ms
 - [ ] Bundle size <200kb
@@ -287,11 +319,13 @@ interface ModuleScore {
 ## 🔗 Dependencies & Resources
 
 ### Development Prerequisites
+
 - React 18+ met TypeScript
 - TailwindCSS configuratie
 - Recharts voor visualisaties
 
 ### Content Requirements
+
 - Vereenvoudigde teksten
 - Basis tooltips
 - Error messages

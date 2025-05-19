@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 
@@ -17,13 +17,13 @@ export function useFeatureFlag(flag: FeatureFlag, defaultValue: boolean = false)
   useEffect(() => {
     // In een echte applicatie zou dit een API call of lokale storage check kunnen zijn
     const flags: Record<FeatureFlag, boolean> = {
-      'enhancedUI': true, // Altijd aan voor deze demo
+      enhancedUI: true, // Altijd aan voor deze demo
       'pdf-export': false,
-      'advanced-analytics': false
+      'advanced-analytics': false,
     };
 
     setIsEnabled(flags[flag] ?? defaultValue);
   }, [flag, defaultValue]);
 
   return isEnabled;
-} 
+}

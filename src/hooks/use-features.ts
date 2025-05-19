@@ -19,6 +19,6 @@ export const useFeatures = () => {
 
   return {
     isNewUI,
-    toggleNewUI
+    toggleNewUI,
   };
-}; 
+};

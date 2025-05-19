@@ -9,15 +9,15 @@ const mockQuickWins = [
     description: 'Test Description',
     impact: 'high' as const,
     module: 'Test Module',
-    codeSnippet: 'console.log("test");'
+    codeSnippet: 'console.log("test");',
   },
   {
     id: '2',
     title: 'Another Quick Win',
     description: 'Another Description',
     impact: 'medium' as const,
-    module: 'Another Module'
-  }
+    module: 'Another Module',
+  },
 ];
 
 describe('QuickWinsPanel', () => {
@@ -44,10 +44,10 @@ describe('QuickWinsPanel', () => {
 
   it('handles copy functionality', async () => {
     const mockClipboard = {
-      writeText: jest.fn().mockImplementation(() => Promise.resolve())
+      writeText: jest.fn().mockImplementation(() => Promise.resolve()),
     };
     Object.assign(navigator, {
-      clipboard: mockClipboard
+      clipboard: mockClipboard,
     });
 
     render(<QuickWinsPanel quickWins={mockQuickWins} />);
@@ -65,4 +65,4 @@ describe('QuickWinsPanel', () => {
     expect(screen.getByText('Test Module')).toBeInTheDocument();
     expect(screen.getByText('Another Module')).toBeInTheDocument();
   });
-}); 
+});

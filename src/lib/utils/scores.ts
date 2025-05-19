@@ -5,7 +5,7 @@ export const calculateScoreImprovement = (current: number, predicted: number) =>
   return {
     value: improvement,
     isPositive: improvement > 0,
-    percentage: Math.abs(Math.round((improvement / current) * 100))
+    percentage: Math.abs(Math.round((improvement / current) * 100)),
   };
 };
 
@@ -59,4 +59,4 @@ export const getStatusLabel = (status: Status): string => {
     default:
       return 'Onbekend';
   }
-}; 
+};

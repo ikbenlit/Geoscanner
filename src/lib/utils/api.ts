@@ -52,4 +52,4 @@ export async function fetchScanHistory(url: string): Promise<ScanResult[]> {
     console.error('Fout bij ophalen scan geschiedenis:', error);
     return [];
   }
-} 
+}

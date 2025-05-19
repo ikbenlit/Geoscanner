@@ -5,8 +5,8 @@ import { Pool } from 'pg';
 export const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 
 // Helper functie voor database queries
@@ -36,4 +36,4 @@ export async function transaction(callback: (client: any) => Promise<any>) {
   }
 }
 
-export { sql }; 
+export { sql };

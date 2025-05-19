@@ -9,7 +9,7 @@ const mockModules = [
     score: 75,
     maxScore: 100,
     status: 'success' as const,
-    lastUpdated: '2024-03-20'
+    lastUpdated: '2024-03-20',
   },
   {
     id: '2',
@@ -17,7 +17,7 @@ const mockModules = [
     score: 45,
     maxScore: 100,
     status: 'warning' as const,
-    lastUpdated: '2024-03-19'
+    lastUpdated: '2024-03-19',
   },
   {
     id: '3',
@@ -25,8 +25,8 @@ const mockModules = [
     score: 0,
     maxScore: 100,
     status: 'danger' as const,
-    lastUpdated: '2024-03-18'
-  }
+    lastUpdated: '2024-03-18',
+  },
 ];
 
 describe('ModuleOverview', () => {
@@ -83,4 +83,4 @@ describe('ModuleOverview', () => {
     // Check if radar chart container is present
     expect(screen.getByRole('img', { name: /radar chart/i })).toBeInTheDocument();
   });
-}); 
+});

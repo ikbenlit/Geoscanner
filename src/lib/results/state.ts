@@ -18,7 +18,7 @@ type ResultsStore = StateCreator<ResultsState>;
 
 export const useResultsStore = create<ResultsState>()(
   persist(
-    ((set) => ({
+    (set => ({
       completedActions: [],
       expandedModules: [],
       copiedSnippets: [],
@@ -26,43 +26,43 @@ export const useResultsStore = create<ResultsState>()(
 
       addCompletedAction: (actionId: string) =>
         set((state: ResultsState) => ({
-          completedActions: [...state.completedActions, actionId]
+          completedActions: [...state.completedActions, actionId],
         })),
 
       removeCompletedAction: (actionId: string) =>
         set((state: ResultsState) => ({
-          completedActions: state.completedActions.filter((id: string) => id !== actionId)
+          completedActions: state.completedActions.filter((id: string) => id !== actionId),
         })),
 
       toggleModuleExpansion: (moduleId: string) =>
         set((state: ResultsState) => ({
           expandedModules: state.expandedModules.includes(moduleId)
             ? state.expandedModules.filter((id: string) => id !== moduleId)
-            : [...state.expandedModules, moduleId]
+            : [...state.expandedModules, moduleId],
         })),
 
       addCopiedSnippet: (snippetId: string) =>
         set((state: ResultsState) => ({
-          copiedSnippets: [...state.copiedSnippets, snippetId]
+          copiedSnippets: [...state.copiedSnippets, snippetId],
         })),
 
       removeCopiedSnippet: (snippetId: string) =>
         set((state: ResultsState) => ({
-          copiedSnippets: state.copiedSnippets.filter((id: string) => id !== snippetId)
+          copiedSnippets: state.copiedSnippets.filter((id: string) => id !== snippetId),
         })),
 
       setLayout: (layout: 'grid' | 'list') =>
         set(() => ({
-          layout
-        }))
+          layout,
+        })),
     })) as ResultsStore,
     {
       name: 'geo-scanner-results',
       partialize: (state: ResultsState) => ({
         completedActions: state.completedActions,
         expandedModules: state.expandedModules,
-        layout: state.layout
-      })
+        layout: state.layout,
+      }),
     } as PersistOptions<ResultsState>
   )
-); 
+);

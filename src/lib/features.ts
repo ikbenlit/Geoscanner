@@ -3,7 +3,7 @@
  */
 
 export const FEATURES = {
-  NEW_RESULTS_UI: process.env.NEXT_PUBLIC_ENABLE_NEW_RESULTS_UI === 'true'
+  NEW_RESULTS_UI: process.env.NEXT_PUBLIC_ENABLE_NEW_RESULTS_UI === 'true',
 } as const;
 
 export type FeatureKey = keyof typeof FEATURES;
@@ -28,8 +28,8 @@ export const isNewUIEnabled = (): boolean => {
  */
 export const toggleNewUI = (enabled: boolean): void => {
   if (typeof window === 'undefined') return;
-  
+
   window.localStorage.setItem('prefer-new-ui', enabled ? 'true' : 'false');
   // Trigger een page refresh om de wijziging door te voeren
   window.location.reload();
-}; 
+};

@@ -50,4 +50,4 @@ export interface ModuleProgress {
   totalActions: number;
   completedActions: number;
   lastUpdated: string;
-} 
+}
