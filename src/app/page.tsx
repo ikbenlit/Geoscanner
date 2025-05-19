@@ -163,6 +163,8 @@ export default function Home() {
     setUrl("");
     setFullDomainScan(false);
     setScanResult(null);
+    setProgress(0);
+    setIsScanning(false);
   };
 
   if (showResults && scanResult) {
@@ -215,28 +217,17 @@ export default function Home() {
             </div>
             <Button 
               type="submit" 
-              className="w-full h-12 text-lg bg-gradient-to-r from-[#0F45C5] to-[#44A5FF] hover:opacity-90"
+              className="w-full h-12 text-lg"
               disabled={isScanning}
             >
-              {isScanning ? 'Scannen...' : 'Start Analyse'}
+              {isScanning ? 'Bezig met scannen...' : 'Start Scan'}
             </Button>
-
-            {isScanning && (
-              <div className="space-y-4 pt-4">
-                <div className="flex justify-between text-sm text-steel">
-                  <span>Voortgang</span>
-                  <span>{progress}%</span>
-                </div>
-                <Progress value={progress} className="h-2" />
-                <p className="text-sm text-steel text-center animate-pulse">
-                  {progress < 25 && "Robots.txt en sitemap.xml worden gecontroleerd..."}
-                  {progress >= 25 && progress < 50 && "Structured data wordt geanalyseerd..."}
-                  {progress >= 50 && progress < 75 && "Content wordt geëvalueerd..."}
-                  {progress >= 75 && "Resultaten worden samengesteld..."}
-                </p>
-              </div>
-            )}
           </form>
+          {isScanning && (
+            <div className="mt-4">
+              <Progress value={progress} className="h-2" />
+            </div>
+          )}
         </CardContent>
       </Card>
 
