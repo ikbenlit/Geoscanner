@@ -8,27 +8,45 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RobotsTxtRules, SitemapData, HtmlSnapshot } from "@/lib/scanner";
 import { CrawlAccessResult } from "@/lib/modules/crawl-access";
+import { StructuredDataResult } from "@/lib/modules/structured-data";
+import { CrawlResult } from '@/lib/scanner';
+import { ContentAnalysisResult } from '@/lib/modules/content-analysis';
+import { Badge } from "@/components/ui/badge";
+import { TechnicalSeoResult } from '@/lib/modules/technical-seo';
+
+type Status = 'success' | 'warning' | 'danger';
+
+function getStatusVariant(status: Status): 'default' | 'destructive' | 'secondary' {
+  switch (status) {
+    case 'success':
+      return 'default';
+    case 'warning':
+      return 'secondary';
+    case 'danger':
+      return 'destructive';
+  }
+}
 
 interface ScanResult {
   overallScore: number;
-  modules: {
+  modules: Array<{
     id: string;
     name: string;
     score: number;
     maxScore: number;
-    status: 'success' | 'warning' | 'danger';
+    status: Status;
     details: string[];
-  }[];
-  quickWins: {
+  }>;
+  quickWins: Array<{
     module: string;
     impact: 'high' | 'medium' | 'low';
     description: string;
     fix: string;
-  }[];
+  }>;
 }
 
 interface ScanResultsProps {
-  result: {
+  result: ScanResult & {
     url: string;
     robotsTxt: string | null;
     robotsRules: RobotsTxtRules | null;
@@ -37,13 +55,16 @@ interface ScanResultsProps {
     html: string | null;
     htmlSnapshot: HtmlSnapshot | null;
     crawlAccess: CrawlAccessResult | null;
+    structuredData: StructuredDataResult | null;
     error?: string;
+    contentAnalysis: ContentAnalysisResult | null;
+    technicalSeo: TechnicalSeoResult | null;
   };
   onNewScan: () => void;
 }
 
 export function ScanResults({ result, onNewScan }: ScanResultsProps) {
-  const getStatusColor = (status: 'success' | 'warning' | 'danger') => {
+  const getStatusColor = (status: Status) => {
     switch (status) {
       case 'success':
         return 'text-success-green';
@@ -54,7 +75,7 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
     }
   };
 
-  const getStatusBgColor = (status: 'success' | 'warning' | 'danger') => {
+  const getStatusBgColor = (status: Status) => {
     switch (status) {
       case 'success':
         return 'bg-success-green/10';
@@ -63,6 +84,12 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
       case 'danger':
         return 'bg-danger-red/10';
     }
+  };
+
+  const getStatusFromScore = (score: number): Status => {
+    if (score >= 80) return 'success';
+    if (score >= 50) return 'warning';
+    return 'danger';
   };
 
   const renderRobotsRules = (rules: RobotsTxtRules) => (
@@ -213,130 +240,83 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
 
   const renderCrawlAccess = (crawlAccess: CrawlAccessResult) => (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h4 className="font-semibold">Crawl-toegang Score</h4>
-        <div className={cn(
-          "px-3 py-1 rounded-full text-sm font-medium",
-          getStatusBgColor(crawlAccess.status),
-          getStatusColor(crawlAccess.status)
-        )}>
-          {crawlAccess.score}/{crawlAccess.maxScore} punten
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h4 className="font-medium mb-2">Robots.txt</h4>
+          <ul className="space-y-2">
+            <li className="text-sm text-steel">
+              {crawlAccess.details.robotsTxt.exists ? 'Aanwezig' : 'Niet gevonden'}
+            </li>
+            <li className="text-sm text-steel">
+              {crawlAccess.details.robotsTxt.allowsBots ? 'Bots toegestaan' : 'Bots geblokkeerd'}
+            </li>
+            <li className="text-sm text-steel">
+              {crawlAccess.details.robotsTxt.hasCrawlDelay ? 'Crawl delay ingesteld' : 'Geen crawl delay'}
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-medium mb-2">Sitemap</h4>
+          <ul className="space-y-2">
+            <li className="text-sm text-steel">
+              {crawlAccess.details.sitemap.exists ? 'Aanwezig' : 'Niet gevonden'}
+            </li>
+            <li className="text-sm text-steel">
+              {crawlAccess.details.sitemap.isValid ? 'Geldig' : 'Ongeldig'}
+            </li>
+            <li className="text-sm text-steel">
+              {crawlAccess.details.sitemap.urlCount} URLs gevonden
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <h5 className="font-medium">Robots.txt</h5>
-          <ul className="space-y-1 text-sm">
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.robotsTxt.exists ? "bg-success-green" : "bg-danger-red"
-              )} />
-              {crawlAccess.details.robotsTxt.exists ? "Bestand aanwezig" : "Bestand niet gevonden"}
-            </li>
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.robotsTxt.allowsBots ? "bg-success-green" : "bg-danger-red"
-              )} />
-              {crawlAccess.details.robotsTxt.allowsBots ? "Bots toegestaan" : "Bots geblokkeerd"}
-            </li>
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.robotsTxt.hasCrawlDelay ? "bg-success-green" : "bg-warning-amber"
-              )} />
-              {crawlAccess.details.robotsTxt.hasCrawlDelay ? "Crawl delay ingesteld" : "Geen crawl delay"}
-            </li>
-          </ul>
-        </div>
+      <div>
+        <h4 className="font-medium mb-2">Meta Robots</h4>
+        <ul className="space-y-2">
+          <li className="text-sm text-steel">
+            {crawlAccess.details.metaRobots.exists ? 'Aanwezig' : 'Niet gevonden'}
+          </li>
+          <li className="text-sm text-steel">
+            {crawlAccess.details.metaRobots.allowsIndexing ? 'Indexering toegestaan' : 'Indexering geblokkeerd'}
+          </li>
+          <li className="text-sm text-steel">
+            {crawlAccess.details.metaRobots.allowsFollowing ? 'Link volgen toegestaan' : 'Link volgen geblokkeerd'}
+          </li>
+        </ul>
+      </div>
 
-        <div className="space-y-2">
-          <h5 className="font-medium">Sitemap</h5>
-          <ul className="space-y-1 text-sm">
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.sitemap.exists ? "bg-success-green" : "bg-danger-red"
-              )} />
-              {crawlAccess.details.sitemap.exists ? "Bestand aanwezig" : "Bestand niet gevonden"}
-            </li>
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.sitemap.isValid ? "bg-success-green" : "bg-danger-red"
-              )} />
-              {crawlAccess.details.sitemap.isValid 
-                ? `${crawlAccess.details.sitemap.urlCount} URLs gevonden`
-                : "Geen geldige URLs"}
-            </li>
-          </ul>
-        </div>
-
-        <div className="space-y-2">
-          <h5 className="font-medium">Meta Robots</h5>
-          <ul className="space-y-1 text-sm">
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.metaRobots.exists ? "bg-success-green" : "bg-warning-amber"
-              )} />
-              {crawlAccess.details.metaRobots.exists ? "Tag aanwezig" : "Geen tag gevonden"}
-            </li>
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.metaRobots.allowsIndexing ? "bg-success-green" : "bg-danger-red"
-              )} />
-              {crawlAccess.details.metaRobots.allowsIndexing ? "Indexering toegestaan" : "Indexering geblokkeerd"}
-            </li>
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.metaRobots.allowsFollowing ? "bg-success-green" : "bg-warning-amber"
-              )} />
-              {crawlAccess.details.metaRobots.allowsFollowing ? "Link volgen toegestaan" : "Link volgen geblokkeerd"}
-            </li>
-          </ul>
-        </div>
-
-        <div className="space-y-2">
-          <h5 className="font-medium">HTTP Status</h5>
-          <ul className="space-y-1 text-sm">
-            <li className="flex items-center">
-              <span className={cn(
-                "w-2 h-2 rounded-full mr-2",
-                crawlAccess.details.httpStatus.isOk ? "bg-success-green" : "bg-danger-red"
-              )} />
-              {crawlAccess.details.httpStatus.isOk 
-                ? `Status OK (${crawlAccess.details.httpStatus.code})`
-                : `Status niet OK (${crawlAccess.details.httpStatus.code})`}
-            </li>
-          </ul>
-        </div>
+      <div>
+        <h4 className="font-medium mb-2">HTTP Status</h4>
+        <ul className="space-y-2">
+          <li className="text-sm text-steel">
+            {crawlAccess.details.httpStatus.isOk 
+              ? `Status OK (${crawlAccess.details.httpStatus.code})`
+              : `Status niet OK (${crawlAccess.details.httpStatus.code})`}
+          </li>
+        </ul>
       </div>
 
       {crawlAccess.fixes.length > 0 && (
-        <div className="mt-6">
-          <h5 className="font-medium mb-3">Aanbevolen Verbeteringen</h5>
-          <div className="space-y-3">
+        <div>
+          <h4 className="font-medium mb-2">Verbeterpunten</h4>
+          <div className="space-y-2">
             {crawlAccess.fixes.map((fix, index) => (
-              <div key={index} className="p-4 rounded-lg bg-slate-50">
-                <div className="flex items-center justify-between mb-2">
+              <div key={index} className="p-3 rounded-lg border">
+                <div className="flex items-center space-x-2 mb-2">
                   <span className={cn(
-                    "text-sm px-2 py-1 rounded",
+                    "px-2 py-1 rounded text-xs font-medium",
                     fix.impact === 'high' ? "bg-danger-red/10 text-danger-red" :
                     fix.impact === 'medium' ? "bg-warning-amber/10 text-warning-amber" :
                     "bg-success-green/10 text-success-green"
                   )}>
-                    {fix.impact === 'high' ? 'Hoog' : fix.impact === 'medium' ? 'Medium' : 'Laag'} impact
+                    {fix.impact.toUpperCase()}
                   </span>
                 </div>
-                <p className="text-steel text-sm mb-2">{fix.description}</p>
-                <code className="block p-2 bg-slate-100 rounded text-sm font-mono">
-                  {fix.fix}
-                </code>
+                <p className="text-sm text-steel mb-2">{fix.description}</p>
+                <div className="bg-muted p-2 rounded">
+                  <pre className="text-xs text-steel whitespace-pre-wrap">{fix.fix}</pre>
+                </div>
               </div>
             ))}
           </div>
@@ -345,167 +325,453 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
     </div>
   );
 
+  const renderStructuredData = (data: StructuredDataResult) => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h4 className="font-medium mb-2">JSON-LD</h4>
+          <dl className="space-y-2">
+            <div>
+              <dt className="text-sm font-medium">Aanwezig</dt>
+              <dd className="text-sm text-steel">{data.details.jsonLd.exists ? 'Ja' : 'Nee'}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium">Geldig</dt>
+              <dd className="text-sm text-steel">{data.details.jsonLd.isValid ? 'Ja' : 'Nee'}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium">Schema Types</dt>
+              <dd className="text-sm text-steel">
+                {data.details.jsonLd.schemaTypes.length > 0 
+                  ? data.details.jsonLd.schemaTypes.join(', ') 
+                  : 'Geen gevonden'}
+              </dd>
+            </div>
+          </dl>
+        </div>
+        <div>
+          <h4 className="font-medium mb-2">Open Graph</h4>
+          <dl className="space-y-2">
+            <div>
+              <dt className="text-sm font-medium">Aanwezig</dt>
+              <dd className="text-sm text-steel">{data.details.openGraph.exists ? 'Ja' : 'Nee'}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium">Titel</dt>
+              <dd className="text-sm text-steel">{data.details.openGraph.hasTitle ? 'Ja' : 'Nee'}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium">Beschrijving</dt>
+              <dd className="text-sm text-steel">{data.details.openGraph.hasDescription ? 'Ja' : 'Nee'}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium">Afbeelding</dt>
+              <dd className="text-sm text-steel">{data.details.openGraph.hasImage ? 'Ja' : 'Nee'}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-medium">Type</dt>
+              <dd className="text-sm text-steel">{data.details.openGraph.hasType ? 'Ja' : 'Nee'}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      {data.fixes.length > 0 && (
+        <div>
+          <h4 className="font-medium mb-2">Verbeterpunten</h4>
+          <div className="space-y-2">
+            {data.fixes.map((fix, index) => (
+              <div key={index} className="p-3 rounded-lg border">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className={cn(
+                    "px-2 py-1 rounded text-xs font-medium",
+                    fix.impact === 'high' ? "bg-danger-red/10 text-danger-red" :
+                    fix.impact === 'medium' ? "bg-warning-amber/10 text-warning-amber" :
+                    "bg-success-green/10 text-success-green"
+                  )}>
+                    {fix.impact.toUpperCase()}
+                  </span>
+                </div>
+                <p className="text-sm text-steel mb-2">{fix.description}</p>
+                <div className="bg-muted p-2 rounded">
+                  <pre className="text-xs text-steel whitespace-pre-wrap">{fix.fix}</pre>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  function renderContentAnalysis(contentAnalysis: ContentAnalysisResult | null) {
+    if (!contentAnalysis) return null;
+
+    return (
+      <AccordionItem value="content-analysis">
+        <AccordionTrigger>
+          <div className="flex items-center gap-2">
+            <span>Content Analyse</span>
+            <Badge variant={getStatusVariant(contentAnalysis.status)}>
+              {contentAnalysis.score}/{contentAnalysis.maxScore}
+            </Badge>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent>
+          <div className="space-y-4">
+            {/* Taal */}
+            <div>
+              <h4 className="font-medium mb-2">Taal</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Gedetecteerde taal</p>
+                  <p className="font-medium">{contentAnalysis.details.language.detected.toUpperCase()}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Betrouwbaarheid</p>
+                  <p className="font-medium">{(contentAnalysis.details.language.confidence * 100).toFixed(1)}%</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Keywords */}
+            <div>
+              <h4 className="font-medium mb-2">Keywords</h4>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Aantal keywords</p>
+                  <p className="font-medium">{contentAnalysis.details.keywords.count}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Keyword density</p>
+                  <p className="font-medium">{contentAnalysis.details.keywords.density.toFixed(2)}%</p>
+                </div>
+              </div>
+              {contentAnalysis.details.keywords.topKeywords.length > 0 && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">Top keywords</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {contentAnalysis.details.keywords.topKeywords.map((keyword) => (
+                      <div key={keyword.keyword} className="flex justify-between items-center p-2 bg-muted rounded">
+                        <span>{keyword.keyword}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {keyword.count}x ({keyword.density.toFixed(1)}%)
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Duplicate Content */}
+            <div>
+              <h4 className="font-medium mb-2">Duplicate Content</h4>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
+                  <p className="font-medium">
+                    {contentAnalysis.details.duplicateContent.hasDuplicates ? 'Gevonden' : 'Geen duplicaten'}
+                  </p>
+                </div>
+                {contentAnalysis.details.duplicateContent.hasDuplicates && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Duplicate ratio</p>
+                    <p className="font-medium">
+                      {(contentAnalysis.details.duplicateContent.duplicateRatio * 100).toFixed(1)}%
+                    </p>
+                  </div>
+                )}
+              </div>
+              {contentAnalysis.details.duplicateContent.duplicateBlocks.length > 0 && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">Gedupliceerde blokken</p>
+                  <div className="space-y-2">
+                    {contentAnalysis.details.duplicateContent.duplicateBlocks.map((block) => (
+                      <div key={block.hash} className="p-2 bg-muted rounded">
+                        <p className="text-sm mb-1">{block.text}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {block.occurrences}x voorkomend
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Verbeterpunten */}
+            {contentAnalysis.fixes.length > 0 && (
+              <div>
+                <h4 className="font-medium mb-2">Verbeterpunten</h4>
+                <div className="space-y-2">
+                  {contentAnalysis.fixes.map((fix, index) => (
+                    <div key={index} className="p-3 bg-muted rounded">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant={getStatusVariant(fix.impact === 'high' ? 'danger' : fix.impact === 'medium' ? 'warning' : 'success')}>
+                          {fix.impact}
+                        </Badge>
+                        <p className="font-medium">{fix.description}</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{fix.fix}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    );
+  }
+
+  function renderTechnicalSeo(technicalSeo: TechnicalSeoResult | null) {
+    if (!technicalSeo) return null;
+
+    return (
+      <AccordionItem value="technical-seo">
+        <AccordionTrigger>
+          <div className="flex items-center gap-2">
+            <span>Technical SEO</span>
+            <Badge variant={getStatusVariant(technicalSeo.status)}>
+              {technicalSeo.score}/{technicalSeo.maxScore}
+            </Badge>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent>
+          <div className="space-y-4">
+            {/* Performance */}
+            <div>
+              <h4 className="font-medium mb-2">Performance</h4>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Laadtijd</p>
+                  <p className="font-medium">{technicalSeo.details.performance.loadTime}ms</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Pagina grootte</p>
+                  <p className="font-medium">{(technicalSeo.details.performance.pageSize / 1024).toFixed(1)}KB</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Aantal resources</p>
+                  <p className="font-medium">{technicalSeo.details.performance.resourceCount}</p>
+                </div>
+              </div>
+              {technicalSeo.details.performance.metrics && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">Core Web Vitals</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.entries(technicalSeo.details.performance.metrics).map(([metric, value]) => (
+                      <div key={metric} className="flex justify-between items-center p-2 bg-muted rounded">
+                        <span className="text-sm font-medium">{metric.toUpperCase()}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {value?.toFixed(2)}{metric === 'cls' ? '' : 'ms'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Friendly */}
+            <div>
+              <h4 className="font-medium mb-2">Mobile Friendly</h4>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
+                  <p className="font-medium">
+                    {technicalSeo.details.mobileFriendly.isMobileFriendly ? 'Mobiel-vriendelijk' : 'Niet mobiel-vriendelijk'}
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center gap-2 p-2 bg-muted rounded">
+                  <span className="text-sm">Viewport</span>
+                  <Badge variant={technicalSeo.details.mobileFriendly.viewport ? 'default' : 'destructive'}>
+                    {technicalSeo.details.mobileFriendly.viewport ? 'OK' : 'Mist'}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-muted rounded">
+                  <span className="text-sm">Responsive Images</span>
+                  <Badge variant={technicalSeo.details.mobileFriendly.responsiveImages ? 'default' : 'destructive'}>
+                    {technicalSeo.details.mobileFriendly.responsiveImages ? 'OK' : 'Mist'}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-muted rounded">
+                  <span className="text-sm">Touch Elements</span>
+                  <Badge variant={technicalSeo.details.mobileFriendly.touchElements ? 'default' : 'destructive'}>
+                    {technicalSeo.details.mobileFriendly.touchElements ? 'OK' : 'Mist'}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-muted rounded">
+                  <span className="text-sm">Font Size</span>
+                  <Badge variant={technicalSeo.details.mobileFriendly.fontSize ? 'default' : 'destructive'}>
+                    {technicalSeo.details.mobileFriendly.fontSize ? 'OK' : 'Mist'}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Security */}
+            <div>
+              <h4 className="font-medium mb-2">Security</h4>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">SSL/TLS</p>
+                  <p className="font-medium">
+                    {technicalSeo.details.security.ssl ? 'HTTPS' : 'HTTP'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">HSTS</p>
+                  <p className="font-medium">
+                    {technicalSeo.details.security.hsts ? 'Ingeschakeld' : 'Uitgeschakeld'}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Security Headers</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.entries(technicalSeo.details.security.headers).map(([header, info]) => (
+                    <div key={header} className="flex items-center gap-2 p-2 bg-muted rounded">
+                      <span className="text-sm">{header}</span>
+                      <Badge variant={info.present ? 'default' : 'destructive'}>
+                        {info.present ? 'Aanwezig' : 'Mist'}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Verbeterpunten */}
+            {technicalSeo.fixes.length > 0 && (
+              <div>
+                <h4 className="font-medium mb-2">Verbeterpunten</h4>
+                <div className="space-y-2">
+                  {technicalSeo.fixes.map((fix, index) => (
+                    <div key={index} className="p-3 bg-muted rounded">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium">{fix.title}</span>
+                        <Badge variant="secondary">{fix.impact}</Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{fix.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-display font-bold text-midnight">Scan Resultaten</h1>
-        <Button onClick={onNewScan} variant="outline">
-          Nieuwe Scan
-        </Button>
-      </div>
-
       <Card>
         <CardHeader>
-          <CardTitle>URL Informatie</CardTitle>
-          <CardDescription>{result.url}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {result.crawlAccess && (
-              <>
-                {renderCrawlAccess(result.crawlAccess)}
-                <Separator />
-              </>
-            )}
-
-            <div>
-              <h3 className="font-semibold mb-2">Robots.txt</h3>
-              {result.robotsRules ? (
-                renderRobotsRules(result.robotsRules)
-              ) : (
-                <p className="text-steel">Geen robots.txt gevonden of kon niet worden geparsed</p>
-              )}
-            </div>
-
-            <Separator />
-
-            <div>
-              <h3 className="font-semibold mb-2">Sitemap.xml</h3>
-              {result.sitemapData ? (
-                renderSitemapData(result.sitemapData)
-              ) : (
-                <p className="text-steel">Geen sitemap.xml gevonden of kon niet worden geparsed</p>
-              )}
-            </div>
-
-            <Separator />
-
-            <div>
-              <h3 className="font-semibold mb-2">HTML Snapshot</h3>
-              {result.htmlSnapshot ? (
-                renderHtmlSnapshot(result.htmlSnapshot)
-              ) : (
-                <p className="text-steel">Geen HTML snapshot beschikbaar</p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Score Overzicht */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Score Cirkel */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Overall Score</CardTitle>
-            <CardDescription>Jouw LLM-visibility score</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center space-y-4">
-              <div className={cn(
-                "relative w-48 h-48 rounded-full flex items-center justify-center",
-                "bg-gradient-to-br from-slate-50 to-slate-100"
-              )}>
-                <div className="absolute inset-0 rounded-full border-8 border-current opacity-20" />
-                <div className="text-center">
-                  <span className={cn(
-                    "text-5xl font-display font-bold",
-                    getStatusColor(result.overallScore)
-                  )}>
-                    {result.overallScore}
-                  </span>
-                  <span className="block text-steel">/ 100</span>
-                </div>
-              </div>
-              <div className="flex space-x-4">
-                <Button variant="outline" onClick={onNewScan}>
-                  Nieuwe Scan
-                </Button>
-                <Button>
-                  Download PDF
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Wins */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Wins</CardTitle>
-            <CardDescription>Prioriteer deze verbeteringen</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {result.quickWins.map((win, index) => (
-                <div key={index} className="p-4 rounded-lg bg-slate-50">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium">{win.module}</span>
-                    <span className={cn(
-                      "text-sm px-2 py-1 rounded",
-                      win.impact === 'high' ? "bg-success-green/10 text-success-green" :
-                      win.impact === 'medium' ? "bg-warning-amber/10 text-warning-amber" :
-                      "bg-danger-red/10 text-danger-red"
-                    )}>
-                      {win.impact === 'high' ? 'Hoog' : win.impact === 'medium' ? 'Medium' : 'Laag'} impact
-                    </span>
-                  </div>
-                  <p className="text-steel text-sm mb-2">{win.description}</p>
-                  <code className="block p-2 bg-slate-100 rounded text-sm font-mono">
-                    {win.fix}
-                  </code>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Module Details */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Module Details</CardTitle>
-          <CardDescription>Gedetailleerde analyse per module</CardDescription>
+          <CardTitle>Scan Resultaten</CardTitle>
+          <CardDescription>Analyse van {result.url}</CardDescription>
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
-            {result.modules.map((module) => (
-              <AccordionItem key={module.id} value={module.id}>
-                <AccordionTrigger className="hover:no-underline">
-                  <div className="flex items-center space-x-4">
-                    <span className="font-medium">{module.name}</span>
+            {result.crawlAccess && (
+              <AccordionItem value="crawl-access">
+                <AccordionTrigger>
+                  <div className="flex items-center space-x-2">
+                    <span>Crawl-toegang</span>
                     <span className={cn(
-                      "text-sm px-2 py-1 rounded",
-                      module.status === 'success' ? "bg-success-green/10 text-success-green" :
-                      module.status === 'warning' ? "bg-warning-amber/10 text-warning-amber" :
-                      "bg-danger-red/10 text-danger-red"
+                      "px-2 py-1 rounded text-xs font-medium",
+                      getStatusBgColor(result.crawlAccess.status),
+                      getStatusColor(result.crawlAccess.status)
                     )}>
-                      {module.score}/{module.maxScore} punten
+                      {result.crawlAccess.score}/{result.crawlAccess.maxScore}
                     </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="space-y-2 pl-4">
-                    {module.details.map((detail, index) => (
-                      <p key={index} className="text-steel text-sm">{detail}</p>
-                    ))}
-                  </div>
+                  {renderCrawlAccess(result.crawlAccess)}
                 </AccordionContent>
               </AccordionItem>
-            ))}
+            )}
+
+            {result.structuredData && (
+              <AccordionItem value="structured-data">
+                <AccordionTrigger>
+                  <div className="flex items-center space-x-2">
+                    <span>Structured Data</span>
+                    <span className={cn(
+                      "px-2 py-1 rounded text-xs font-medium",
+                      getStatusBgColor(result.structuredData.status),
+                      getStatusColor(result.structuredData.status)
+                    )}>
+                      {result.structuredData.score}/{result.structuredData.maxScore}
+                    </span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {renderStructuredData(result.structuredData)}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+
+            {result.robotsRules && (
+              <AccordionItem value="robots">
+                <AccordionTrigger>Robots.txt</AccordionTrigger>
+                <AccordionContent>
+                  {renderRobotsRules(result.robotsRules)}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+
+            {result.sitemapData && (
+              <AccordionItem value="sitemap">
+                <AccordionTrigger>Sitemap.xml</AccordionTrigger>
+                <AccordionContent>
+                  {renderSitemapData(result.sitemapData)}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+
+            {result.htmlSnapshot && (
+              <AccordionItem value="html">
+                <AccordionTrigger>HTML Snapshot</AccordionTrigger>
+                <AccordionContent>
+                  {renderHtmlSnapshot(result.htmlSnapshot)}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+
+            {result.contentAnalysis && (
+              <AccordionItem value="content-analysis">
+                <AccordionTrigger>
+                  <div className="flex items-center space-x-2">
+                    <span>Content Analyse</span>
+                    <span className={cn(
+                      "px-2 py-1 rounded text-xs font-medium",
+                      getStatusBgColor(result.contentAnalysis.status),
+                      getStatusColor(result.contentAnalysis.status)
+                    )}>
+                      {result.contentAnalysis.score}/{result.contentAnalysis.maxScore}
+                    </span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {renderContentAnalysis(result.contentAnalysis)}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+
+            {result.technicalSeo && renderTechnicalSeo(result.technicalSeo)}
           </Accordion>
         </CardContent>
       </Card>
+
+      <div className="flex justify-end">
+        <Button onClick={onNewScan}>Nieuwe Scan</Button>
+      </div>
     </div>
   );
-} 
+}

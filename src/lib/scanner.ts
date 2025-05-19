@@ -2,6 +2,9 @@ import { parse as parseUrl } from 'url';
 import { XMLParser } from 'fast-xml-parser';
 import { createHash } from 'crypto';
 import { analyzeCrawlAccess, CrawlAccessResult } from './modules/crawl-access';
+import { analyzeStructuredData, StructuredDataResult } from './modules/structured-data';
+import { analyzeContent, ContentAnalysisResult } from './modules/content-analysis';
+import { analyzeTechnicalSeo, TechnicalSeoResult } from './modules/technical-seo';
 
 export interface ScanOptions {
   fullDomainScan: boolean;
@@ -45,14 +48,13 @@ export interface HtmlSnapshot {
 
 export interface CrawlResult {
   url: string;
-  robotsTxt: string | null;
-  robotsRules: RobotsTxtRules | null;
-  sitemapXml: string | null;
+  robotsTxt: RobotsTxtRules | null;
   sitemapData: SitemapData | null;
-  html: string | null;
   htmlSnapshot: HtmlSnapshot | null;
   crawlAccess: CrawlAccessResult | null;
-  error?: string;
+  structuredData: StructuredDataResult | null;
+  contentAnalysis: ContentAnalysisResult | null;
+  technicalSeo: TechnicalSeoResult | null;
 }
 
 export class Scanner {
@@ -269,13 +271,12 @@ export class Scanner {
       return {
         url,
         robotsTxt: null,
-        robotsRules: null,
-        sitemapXml: null,
         sitemapData: null,
-        html: null,
         htmlSnapshot: null,
         crawlAccess: null,
-        error: 'Ongeldige URL'
+        structuredData: null,
+        contentAnalysis: null,
+        technicalSeo: null
       };
     }
 
@@ -290,35 +291,38 @@ export class Scanner {
       const sitemapData = sitemapXml ? this.parseSitemapXml(sitemapXml) : null;
       const htmlSnapshot = html ? this.createHtmlSnapshot(html) : null;
 
-      // Perform crawl-access analysis
-      const crawlAccess = analyzeCrawlAccess(
-        robotsRules,
-        sitemapData,
-        htmlSnapshot,
-        html ? 200 : 404 // Simple HTTP status check
-      );
+      // Analyseer crawl access
+      const crawlAccess = analyzeCrawlAccess(robotsRules, sitemapData, htmlSnapshot, 200);
+
+      // Analyseer structured data
+      const structuredData = htmlSnapshot ? analyzeStructuredData(htmlSnapshot) : null;
+
+      // Analyseer content
+      const contentAnalysis = htmlSnapshot ? analyzeContent(htmlSnapshot) : null;
+
+      // Analyseer technical SEO
+      const technicalSeo = htmlSnapshot ? analyzeTechnicalSeo(htmlSnapshot) : null;
 
       return {
         url,
-        robotsTxt,
-        robotsRules,
-        sitemapXml,
+        robotsTxt: robotsRules,
         sitemapData,
-        html,
         htmlSnapshot,
-        crawlAccess
+        crawlAccess,
+        structuredData,
+        contentAnalysis,
+        technicalSeo
       };
     } catch (error) {
       return {
         url,
         robotsTxt: null,
-        robotsRules: null,
-        sitemapXml: null,
         sitemapData: null,
-        html: null,
         htmlSnapshot: null,
         crawlAccess: null,
-        error: error instanceof Error ? error.message : 'Onbekende fout'
+        structuredData: null,
+        contentAnalysis: null,
+        technicalSeo: null
       };
     }
   }
