@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/lib/auth-context';
+import { UserMenu } from '@/components/auth/UserMenu';
 import { useEffect } from 'react';
 
 const inter = Inter({
@@ -58,6 +59,9 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
                   <Link className="mr-6 flex items-center space-x-2" href="/">
                     <span className="font-display font-bold text-midnight">GEO Scanner</span>
                   </Link>
+                </div>
+                <div className="flex flex-1 items-center justify-end space-x-4">
+                  <UserMenu />
                 </div>
               </div>
             </header>

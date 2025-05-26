@@ -199,31 +199,17 @@ function analyzeExternalMentions(
     otherPlatforms: [] as string[],
   };
 
-  try {
-    // Echte API call voor externe vermeldingen
-    // Gebruik de externe verwijzingsdata API van de backend
-    const _response = fetch(
-      `/api/references/external-mentions?hostname=${encodeURIComponent(hostname)}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-      .then(async res => {
-        if (!res.ok) return result;
-
-        const data = await res.json();
-        result.hasWikipedia = data.hasWikipedia || false;
-        result.hasWikidata = data.hasWikidata || false;
-        result.otherPlatforms = data.otherPlatforms || [];
-      })
-      .catch(err => {
-        console.error('Fout bij ophalen externe vermeldingen:', err);
-      });
-  } catch (_error) {
-    console.error('Fout bij analyseExternalMentions:', _error);
+  // TODO: Implementeer echte externe API calls in Fase 3
+  // Voor nu gebruiken we mock data gebaseerd op hostname
+  
+  // Simuleer Wikipedia/Wikidata aanwezigheid voor bekende domeinen
+  const knownDomains = ['wikipedia.org', 'github.com', 'microsoft.com', 'google.com'];
+  const hasKnownDomain = knownDomains.some(domain => hostname.includes(domain));
+  
+  if (hasKnownDomain) {
+    result.hasWikipedia = Math.random() > 0.5;
+    result.hasWikidata = Math.random() > 0.7;
+    result.otherPlatforms = ['Crunchbase', 'LinkedIn Company'];
   }
 
   return result;
@@ -235,27 +221,21 @@ function simulateBacklinksAnalysis(hostname: string): CrossWebResult['details'][
     authorityDomains: [] as string[],
   };
 
-  try {
-    // Echte API call om backlinks te analyseren
-    // Gebruik een backlinkservice zoals Moz/Ahrefs/SEMrush via een backend API
-    const _response = fetch(`/api/references/backlinks?hostname=${encodeURIComponent(hostname)}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(async res => {
-        if (!res.ok) return result;
-
-        const data = await res.json();
-        result.count = data.count || 0;
-        result.authorityDomains = data.authorityDomains || [];
-      })
-      .catch(err => {
-        console.error('Fout bij ophalen backlinks:', err);
-      });
-  } catch (_error) {
-    console.error('Fout bij analyseBacklinks:', _error);
+  // TODO: Implementeer echte backlink API calls in Fase 3
+  // Voor nu gebruiken we mock data gebaseerd op hostname
+  
+  // Simuleer backlinks gebaseerd op domain populariteit
+  const authorityDomains = ['github.com', 'stackoverflow.com', 'medium.com', 'dev.to'];
+  const popularDomains = ['google.com', 'microsoft.com', 'github.com', 'stackoverflow.com'];
+  
+  const isPopularDomain = popularDomains.some(domain => hostname.includes(domain));
+  
+  if (isPopularDomain) {
+    result.count = Math.floor(Math.random() * 50) + 10; // 10-60 backlinks
+    result.authorityDomains = authorityDomains.slice(0, Math.floor(Math.random() * 3) + 1);
+  } else {
+    result.count = Math.floor(Math.random() * 10); // 0-10 backlinks
+    result.authorityDomains = Math.random() > 0.7 ? [authorityDomains[0]] : [];
   }
 
   return result;
