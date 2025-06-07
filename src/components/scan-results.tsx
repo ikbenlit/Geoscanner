@@ -18,6 +18,7 @@ import { MultimodalResult } from '@/lib/modules/multimodal';
 import { MonitoringResult } from '@/lib/modules/monitoring';
 import { SchemaAdvancedResult } from '@/lib/modules/schema-advanced';
 import { useState, useEffect } from 'react';
+import { ScanResult } from '@/lib/types';
 
 // Debug logging
 console.log('🔍 ScanResults component wordt geladen');
@@ -35,46 +36,8 @@ function _getStatusVariant(status: Status): 'default' | 'destructive' | 'seconda
   }
 }
 
-interface ScanResult {
-  overallScore: number;
-  modules: Array<{
-    id: string;
-    name: string;
-    score: number;
-    maxScore: number;
-    status: Status;
-    details: string[];
-  }>;
-  quickWins: Array<{
-    module: string;
-    impact: 'high' | 'medium' | 'low';
-    description: string;
-    fix: string;
-  }>;
-}
-
 interface ScanResultsProps {
-  result: ScanResult & {
-    url: string;
-    robotsTxt: string | null;
-    robotsRules: RobotsTxtRules | null;
-    sitemapXml: string | null;
-    sitemapData: SitemapData | null;
-    html: string | null;
-    htmlSnapshot: HtmlSnapshot | null;
-    crawlAccess: CrawlAccessResult | null;
-    structuredData: StructuredDataResult | null;
-    error?: string;
-    contentAnalysis: ContentAnalysisResult | null;
-    technicalSeo: TechnicalSeoResult | null;
-    answerReady: AnswerReadyResult | null;
-    authority: AuthorityResult | null;
-    freshness: FreshnessResult | null;
-    crossWeb: CrossWebResult | null;
-    multimodal: MultimodalResult | null;
-    monitoring: MonitoringResult | null;
-    schemaAdvanced: SchemaAdvancedResult | null;
-  };
+  result: ScanResult;
   onNewScan: () => void;
 }
 

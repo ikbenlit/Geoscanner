@@ -4,6 +4,13 @@
 
 @layer base {
   :root {
+    /* V0 kleuren */
+    --v0-blue: 201 70% 52%;
+    --v0-orange: 39 91% 61%;
+    --v0-red: 6 78% 57%;
+    --v0-dark: 0 0% 10%;
+
+    /* Bestaande variabelen */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -31,6 +38,13 @@
     --radius: 0.5rem;
   }
   .dark {
+    /* V0 kleuren in dark mode */
+    --v0-blue: 201 70% 45%;
+    --v0-orange: 39 91% 55%;
+    --v0-red: 6 78% 50%;
+    --v0-dark: 0 0% 15%;
+
+    /* Bestaande dark mode variabelen */
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -64,5 +78,33 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Utility classes voor v0 kleuren */
+@layer utilities {
+  .bg-v0-blue {
+    background-color: hsl(var(--v0-blue));
+  }
+  .text-v0-blue {
+    color: hsl(var(--v0-blue));
+  }
+  .bg-v0-orange {
+    background-color: hsl(var(--v0-orange));
+  }
+  .text-v0-orange {
+    color: hsl(var(--v0-orange));
+  }
+  .bg-v0-red {
+    background-color: hsl(var(--v0-red));
+  }
+  .text-v0-red {
+    color: hsl(var(--v0-red));
+  }
+  .bg-v0-dark {
+    background-color: hsl(var(--v0-dark));
+  }
+  .text-v0-dark {
+    color: hsl(var(--v0-dark));
   }
 }

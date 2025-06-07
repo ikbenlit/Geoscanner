@@ -18,6 +18,12 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // V0 kleuren
+        'v0-blue': '#2E9BDA',
+        'v0-orange': '#F5B041',
+        'v0-red': '#E74C3C',
+        'v0-dark': '#1a1a1a',
+
         // Primaire kleuren
         'deep-blue': '#0F45C5',
         midnight: '#171A31',
@@ -37,8 +43,10 @@ const config: Config = {
         snow: '#FFFFFF',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Instrument Sans', 'sans-serif'],
+        sans: ['var(--font-source-sans)', 'sans-serif'],
+        mono: ['var(--font-source-code-pro)', 'monospace'],
+        serif: ['var(--font-lora)', 'serif'],
+        display: ['var(--font-poppins)', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {
@@ -53,6 +61,7 @@ const config: Config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'spin-slow': 'spin 10s linear infinite',
       },
     },
   },
