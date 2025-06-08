@@ -33,6 +33,19 @@ export const getStatusColor = (status: Status): string => {
   }
 };
 
+export const getStatusTextColor = (status: Status): string => {
+  switch (status) {
+    case 'success':
+      return 'text-green-600';
+    case 'warning':
+      return 'text-orange-600';
+    case 'danger':
+      return 'text-red-600';
+    default:
+      return 'text-gray-600';
+  }
+};
+
 export const getImpactColor = (impact: Impact): string => {
   switch (impact) {
     case 'high':
@@ -42,8 +55,6 @@ export const getImpactColor = (impact: Impact): string => {
     case 'low':
       return 'bg-blue-100 text-blue-800'; // Low impact als informatief
     default:
-      // In case of an unknown impact, provide a fallback style
-      const exhaustiveCheck: never = impact;
       return 'bg-gray-100 text-gray-800';
   }
 };

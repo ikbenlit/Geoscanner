@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Highlight, themes } from 'prism-react-renderer';
 import { Copy, ChevronDown, ChevronUp } from 'lucide-react';
 import { AnalysisSection } from '@/lib/types/results';
 import { useClipboard } from '@/lib/utils/clipboard';
@@ -25,11 +24,11 @@ export const DetailedAnalysis = ({ sections }: DetailedAnalysisProps) => {
     <div className="space-y-6">
       {sections.map(section => {
         if (section.isTitle) {
-          let titleClassName = "text-2xl font-semibold pt-4 pb-2 mb-2 border-b-2 border-gray-200";
+          let titleClassName = 'text-2xl font-semibold pt-4 pb-2 mb-2 border-b-2 border-gray-200';
           if (section.title === 'AI-Optimalisatie') {
-            titleClassName += " text-purple-700 border-purple-200";
+            titleClassName += ' text-purple-700 border-purple-200';
           } else if (section.title === 'Algemene SEO') {
-            titleClassName += " text-blue-700 border-blue-200";
+            titleClassName += ' text-blue-700 border-blue-200';
           }
           return (
             <h2 key={section.id} className={titleClassName}>
@@ -51,7 +50,9 @@ export const DetailedAnalysis = ({ sections }: DetailedAnalysisProps) => {
             >
               <div className="flex-1 text-left">
                 <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
-                {section.description && <p className="text-sm text-gray-600 mt-1">{section.description}</p>}
+                {section.description && (
+                  <p className="text-sm text-gray-600 mt-1">{section.description}</p>
+                )}
               </div>
               {expandedSections.includes(section.id) ? (
                 <ChevronUp className="h-5 w-5 text-gray-500" />
@@ -70,67 +71,98 @@ export const DetailedAnalysis = ({ sections }: DetailedAnalysisProps) => {
                   className="px-6 pb-4"
                 >
                   <div className="space-y-4">
-                    {section.codeSnippets && section.codeSnippets.map(snippet => (
-                      <div key={snippet.id} className="relative">
-                        <div className="flex justify-between items-center mb-2">
-                          <p className="text-sm text-gray-700">{snippet.description}</p>
-                          <button
-                            onClick={() => copyToClipboard(snippet.id, snippet.code)}
-                            className="p-2 text-gray-500 hover:text-gray-700"
-                          >
-                            {isCopied(snippet.id) ? (
-                              <span className="text-green-500">Gekopieerd!</span>
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
-                        <SyntaxHighlighter
-                          language={snippet.language}
-                          style={vscDarkPlus}
-                          className="rounded-md"
-                        >
-                          {snippet.code}
-                        </SyntaxHighlighter>
-                      </div>
-                    ))}
-
-                    {(typeof section.currentScore === 'number' && typeof section.predictedScore === 'number') && (
-                      <div className="mt-4 p-4 bg-gray-50 rounded-md">
-                        <h4 className="text-sm font-medium text-gray-900 mb-2">Score Voorspelling</h4>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-gray-600">Huidige Score</p>
-                            <p className="text-lg font-semibold text-gray-900">
-                              {section.currentScore}%
-                            </p>
-                          </div>
-                          <div className="text-center">
-                            <p className="text-sm text-gray-600">Voorspelde Verbetering</p>
-                            <p
-                              className={`text-lg font-semibold ${
-                                (section.currentScore !== undefined && section.predictedScore !== undefined && calculateScoreImprovement(section.currentScore, section.predictedScore).isPositive)
-                                  ? 'text-green-600'
-                                  : 'text-red-600'
-                              }`}
+                    {section.codeSnippets &&
+                      section.codeSnippets.map(snippet => (
+                        <div key={snippet.id} className="relative">
+                          <div className="flex justify-between items-center mb-2">
+                            <p className="text-sm text-gray-700">{snippet.description}</p>
+                            <button
+                              onClick={() => copyToClipboard(snippet.id, snippet.code)}
+                              className="p-2 text-gray-500 hover:text-gray-700"
                             >
-                              {(section.currentScore !== undefined && section.predictedScore !== undefined) && (
-                                calculateScoreImprovement(section.currentScore, section.predictedScore).isPositive ? '+' : '-'
+                              {isCopied(snippet.id) ? (
+                                <span className="text-green-500">Gekopieerd!</span>
+                              ) : (
+                                <Copy className="h-4 w-4" />
                               )}
-                              {(section.currentScore !== undefined && section.predictedScore !== undefined) && 
-                                calculateScoreImprovement(section.currentScore, section.predictedScore).percentage
-                              }%
-                            </p>
+                            </button>
                           </div>
-                          <div>
-                            <p className="text-sm text-gray-600">Voorspelde Score</p>
-                            <p className="text-lg font-semibold text-gray-900">
-                              {section.predictedScore}%
-                            </p>
+                          <Highlight
+                            theme={themes.vsDark}
+                            code={snippet.code}
+                            language={snippet.language}
+                          >
+                            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                              <pre
+                                className={`${className} rounded-md p-4 overflow-auto`}
+                                style={style}
+                              >
+                                {tokens.map((line, i) => (
+                                  <div key={i} {...getLineProps({ line, key: i })}>
+                                    {line.map((token, key) => (
+                                      <span key={key} {...getTokenProps({ token, key })} />
+                                    ))}
+                                  </div>
+                                ))}
+                              </pre>
+                            )}
+                          </Highlight>
+                        </div>
+                      ))}
+
+                    {typeof section.currentScore === 'number' &&
+                      typeof section.predictedScore === 'number' && (
+                        <div className="mt-4 p-4 bg-gray-50 rounded-md">
+                          <h4 className="text-sm font-medium text-gray-900 mb-2">
+                            Score Voorspelling
+                          </h4>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm text-gray-600">Huidige Score</p>
+                              <p className="text-lg font-semibold text-gray-900">
+                                {section.currentScore}%
+                              </p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-sm text-gray-600">Voorspelde Verbetering</p>
+                              <p
+                                className={`text-lg font-semibold ${
+                                  section.currentScore !== undefined &&
+                                  section.predictedScore !== undefined &&
+                                  calculateScoreImprovement(
+                                    section.currentScore,
+                                    section.predictedScore
+                                  ).isPositive
+                                    ? 'text-green-600'
+                                    : 'text-red-600'
+                                }`}
+                              >
+                                {section.currentScore !== undefined &&
+                                  section.predictedScore !== undefined &&
+                                  (calculateScoreImprovement(
+                                    section.currentScore,
+                                    section.predictedScore
+                                  ).isPositive
+                                    ? '+'
+                                    : '-')}
+                                {section.currentScore !== undefined &&
+                                  section.predictedScore !== undefined &&
+                                  calculateScoreImprovement(
+                                    section.currentScore,
+                                    section.predictedScore
+                                  ).percentage}
+                                %
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600">Voorspelde Score</p>
+                              <p className="text-lg font-semibold text-gray-900">
+                                {section.predictedScore}%
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
                 </motion.div>
               )}

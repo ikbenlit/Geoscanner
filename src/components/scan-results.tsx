@@ -18,22 +18,10 @@ import { MultimodalResult } from '@/lib/modules/multimodal';
 import { MonitoringResult } from '@/lib/modules/monitoring';
 import { SchemaAdvancedResult } from '@/lib/modules/schema-advanced';
 import { useState, useEffect } from 'react';
+import { getStatusFromScore } from '@/lib/utils/scores';
 
 // Debug logging
 console.log('🔍 ScanResults component wordt geladen');
-
-type Status = 'success' | 'warning' | 'danger';
-
-function _getStatusVariant(status: Status): 'default' | 'destructive' | 'secondary' {
-  switch (status) {
-    case 'success':
-      return 'default';
-    case 'warning':
-      return 'secondary';
-    case 'danger':
-      return 'destructive';
-  }
-}
 
 interface ScanResult {
   overallScore: number;
@@ -42,7 +30,7 @@ interface ScanResult {
     name: string;
     score: number;
     maxScore: number;
-    status: Status;
+    status: string;
     details: string[];
   }>;
   quickWins: Array<{
@@ -80,13 +68,13 @@ interface ScanResultsProps {
 
 export function ScanResults({ result, onNewScan }: ScanResultsProps) {
   const [isMounted, setIsMounted] = useState(false);
-  
+
   // Client-side alleen - voorkomt hydration mismatch
   useEffect(() => {
     setIsMounted(true);
     console.log('🏆 ScanResults component gemount met score:', result.overallScore);
   }, [result.overallScore]);
-  
+
   // Helper functie om module object te maken met dynamisch berekende status
   const createModuleWithCalculatedStatus = (
     id: string,
@@ -105,12 +93,6 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
     };
   };
 
-  const getStatusFromScore = (score: number): Status => {
-    if (score >= 80) return 'success';
-    if (score >= 50) return 'warning';
-    return 'danger';
-  };
-  
   // Render niks tijdens SSR of als component nog niet gemount is
   if (!isMounted) {
     return <div className="text-center py-12">Resultaten worden geladen...</div>;
@@ -120,11 +102,9 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
 
   const categorizedQuickWins = result.quickWins
     .map(win => {
-      const category = aiModuleIds.includes(win.module)
-        ? 'AI-Optimalisatie'
-        : 'Generieke SEO';
+      const category = aiModuleIds.includes(win.module) ? 'AI-Optimalisatie' : 'Generieke SEO';
       return {
-        id: win.module + '_' + win.description.slice(0,20), // Maak id unieker
+        id: win.module + '_' + win.description.slice(0, 20), // Maak id unieker
         title: win.description,
         description: win.fix,
         impact: win.impact,
@@ -150,9 +130,7 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
     <div className="space-y-8">
       <ScoreHero score={result.overallScore} maxScore={100} url={result.url} />
 
-      <QuickWinsPanel
-        quickWins={categorizedQuickWins}
-      />
+      <QuickWinsPanel quickWins={categorizedQuickWins} />
 
       <ModuleOverview
         modules={[
@@ -229,10 +207,12 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
         sections={[
           // AI-Optimalisatie Secties
           {
-            // @ts-ignore - Dit is een tijdelijke oplossing om een titel-element toe te voegen
             id: 'ai-optimization-title',
             title: 'AI-Optimalisatie',
-            isTitle: true, // Markeer dit als een titel-element
+            description: 'AI-gerichte optimalisaties voor moderne zoekmachines',
+            codeSnippets: [],
+            currentScore: 0,
+            predictedScore: 0,
           },
           {
             id: 'answer-ready',
@@ -251,7 +231,8 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
           {
             id: 'multimodal',
             title: 'Multimodale leesbaarheid',
-            description: 'Is mijn website geoptimaliseerd voor verschillende typen media (tekst, afbeeldingen)?',
+            description:
+              'Is mijn website geoptimaliseerd voor verschillende typen media (tekst, afbeeldingen)?',
             codeSnippets:
               result.multimodal?.fixes.map(fix => ({
                 id: fix.description,
@@ -265,7 +246,8 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
           {
             id: 'schema-advanced',
             title: 'Schema.org Geavanceerd',
-            description: 'Maakt mijn website gebruik van geavanceerde Schema.org markup voor maximale context?',
+            description:
+              'Maakt mijn website gebruik van geavanceerde Schema.org markup voor maximale context?',
             codeSnippets:
               result.schemaAdvanced?.fixes.map(fix => ({
                 id: fix.description,
@@ -292,10 +274,12 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
           },
           // Algemene SEO Secties
           {
-            // @ts-ignore - Dit is een tijdelijke oplossing om een titel-element toe te voegen
             id: 'general-seo-title',
             title: 'Algemene SEO',
-            isTitle: true, // Markeer dit als een titel-element
+            description: 'Fundamentele SEO optimalisaties',
+            codeSnippets: [],
+            currentScore: 0,
+            predictedScore: 0,
           },
           {
             id: 'crawl-access',
@@ -384,7 +368,8 @@ export function ScanResults({ result, onNewScan }: ScanResultsProps) {
           {
             id: 'monitoring',
             title: 'Monitoring-haakjes',
-            description: 'Zijn er systemen aanwezig om de prestaties en gezondheid van de website te monitoren?',
+            description:
+              'Zijn er systemen aanwezig om de prestaties en gezondheid van de website te monitoren?',
             codeSnippets:
               result.monitoring?.fixes.map(fix => ({
                 id: fix.description,
